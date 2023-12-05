@@ -37,8 +37,36 @@
                 var d= new Date()
                 $('#datetimeInput').prop('min', new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16));
             }
-
             setMinTime()
+
+            $('#btn-searchNews').click('click', function() {
+                var keyword = $('#val-newsKeyword').val();
+
+                if(!keyword) {
+                    alert('검색어를 입력해주세요.')
+                    return false;
+                }
+
+                $.ajax({
+                    type : 'get',           // 타입 (get, post, put 등등)
+                    url : '/news/' + keyword,           // 요청할 서버url
+                    dataType : 'json',       // 데이터 타입 (html, xml, json, text 등등)
+                    /*
+                        headers : {              // Http header
+                            "Content-Type" : "application/json"
+                        },
+                        data : JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                            "keyword" : keyword
+                        }),
+                    */
+                    success : function(res) { // 결과 성공 콜백함수
+                        $('#view-newsKeyword').text(res.keyword)
+                    },
+                    error : function(request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+            })
         });
     </script>
 
@@ -198,7 +226,6 @@
         </div>
     </div>
 
-
     <div class="container text-center" style="margin-top: 30px; margin-bottom: 30px">
         <div class="row">
             <!-- 뉴스 -->
@@ -208,60 +235,58 @@
                         <span class="badge bg-dark">뉴스</span>
                     </h1>
                     <h4 class="text-start" style="margin-left: 10px">
-                        <span style="color: darkgrey">@애플</span>
+                        <span style="color: darkgrey" id="view-newsKeyword" th:text="${keyword}">@애플</span>
                     </h4>
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">@</span>
-                    <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                    <button class="btn btn-dark" type="button" id="button-addon1">검색</button>
+                    <span class="input-group-text">@</span>
+                    <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" id="val-newsKeyword">
+                    <!-- 비로그인 -->
+                    <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
+                        <button class="btn btn-dark" type="button" onclick="alert('로그인 이후에 이용해 주세요.')">검색</button>
+                    </th:block>
+                    <!-- 로그인 -->
+                    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                        <button class="btn btn-dark" type="button" id="btn-searchNews">검색</button>
+                    </th:block>
                 </div>
                 <div class="overflow-auto" style="max-height: 370px">
                 <div class="list-group">
                     <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                                뉴스 제목
+                                Lorem ipsum dolor sit amet
                             </h5>
                             <small>2023-12-05 14:20</small>
                         </div>
                         <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus. Accusantium alias consequatur dicta facilis incidunt nulla rerum tempora? At corporis dolores ducimus perspiciatis ...</p>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                                뉴스 제목
+                                Lorem ipsum dolor
                             </h5>
                             <small>2023-12-05 14:20</small>
                         </div>
-                        <p class="mb-1 text-start">뉴스 내용</p>
+                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus.</p>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                                뉴스 제목
+                                Lorem ipsum dolor sit
                             </h5>
                             <small>2023-12-05 14:20</small>
                         </div>
-                        <p class="mb-1 text-start">뉴스 내용</p>
+                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus. Accusantium alias consequatur dicta facilis incidunt nulla rerum tempora?</p>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                                뉴스 제목
+                                Lorem ipsum
                             </h5>
                             <small>2023-12-05 14:20</small>
                         </div>
-                        <p class="mb-1 text-start">뉴스 내용</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">
-                                뉴스 제목
-                            </h5>
-                            <small>2023-12-05 14:20</small>
-                        </div>
-                        <p class="mb-1 text-start">뉴스 내용</p>
+                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus. Accusantium alias consequatur dicta facilis incidunt nulla rerum tempora? At corporis dolores ducimus perspiciatis ...</p>
                     </a>
                 </div>
                 </div>
@@ -274,8 +299,8 @@
                     <span class="input-group-text">내용</span>
                     <input type="text" class="form-control" aria-label="Username">
                     <span class="input-group-text">시간</span>
-                    <input type="datetime-local" id="datetimeInput" class="form-control" aria-label="Server">
-                    <button class="btn btn-dark" type="button" id="button-addon2">등록</button>
+                    <input type="datetime-local" class="form-control" aria-label="Server">
+                    <button class="btn btn-dark" type="button">등록</button>
                 </div>
                 <div class="overflow-auto" style="max-height: 370px">
                 <div class="list-group">
