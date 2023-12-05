@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<header></header>
+
+<body>
+    <th:block th:fragment="fragment-nav">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><h1>Anything</h1></a>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                        </li>
+                    </ul>
+
+                    <!-- 비로그인 -->
+                    <span class="navbar-text" th:if="!${#authorization.expression('isAuthenticated()')}">
+                        <button type="button" onclick="location.href='/login'" class="btn btn-dark">Sign In</button>
+                        <button type="button" onclick="location.href='/join'" class="btn btn-dark">Sign Up</button>
+                    </span>
+
+                    <!-- 로그인 -->
+                    <span class="navbar-text" th:if="${#authorization.expression('isAuthenticated()')}">
+                        <button type="button" onclick="location.href='/logout'" class="btn btn-dark">Logout</button>
+                    </span>
+
+                </div>
+            </div>
+        </nav>
+    </th:block>
+</body>
+
+</html>
