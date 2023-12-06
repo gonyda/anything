@@ -27,6 +27,7 @@ public class HomeController {
         if (user != null) {
             ResponseSearchNewsDto dto = newsKeywordService.searchNews(null, user.getUserId());
             model.addAttribute("keyword", dto.getKeyword());
+            model.addAttribute("news", dto.getNews());
         } else { // 비회원
             model.addAttribute("keyword", "");
         }
