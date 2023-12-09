@@ -5,10 +5,8 @@ import com.bbsk.anything.news.entity.NewsKeyword;
 import com.bbsk.anything.news.repository.NewsKeywordRepository;
 import com.bbsk.anything.user.entity.User;
 import com.bbsk.anything.user.repository.UserRepository;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.*;
@@ -26,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +67,7 @@ public class NewsKeywordService {
      * @param keyword
      * @return
      */
-    private NewsDto getNews(String keyword) {
+    private News getNews(String keyword) {
         ByteBuffer buffer = StandardCharsets.UTF_8.encode(keyword);
         String query = StandardCharsets.UTF_8.decode(buffer).toString();
 
@@ -88,50 +87,62 @@ public class NewsKeywordService {
 
         ResponseEntity<String> result = new RestTemplate().exchange(req, String.class);
 
-        ObjectMapper ob = new ObjectMapper();
-        ob.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper objectMapper = ObjectMapperHolder.INSTANCE.get();
         try {
-            NewsDto newsDto = ob.registerModule(new JavaTimeModule())
-                                .readValue(result.getBody(), NewsDto.class);
-            System.out.println("newsDto = " + newsDto.toString());
+            return objectMapper.registerModule(new JavaTimeModule())
+                                .readValue(result.getBody(), News.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     /**
-     * News response Dto
+     * news 응답 dto
      */
     @Getter
     @AllArgsConstructor
+    @ToString
     public class ResponseSearchNewsDto {
 
         private String keyword;
-        private NewsDto news;
+        private News news;
     }
 
+    /**
+     * 네이버 뉴스
+     */
     @Getter
     @ToString
     @NoArgsConstructor
-    public static class NewsDto {
+    public static class News {
 
-        /*
-        * TODO LocalDateTime 구현
-        * */
-        /*@JsonFormat(pattern = "EEE, dd MMM yyyy HH:mm:ss Z")
-        private LocalDateTime lastBuildDate;*/
+        private LocalDateTime lastBuildDate;
+        private int start; // 시작
+        private int display; // 조회 갯수
         private List<NewsItem> items;
 
+        public void setLastBuildDate(String lastBuildDate) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+            this.lastBuildDate = LocalDateTime.parse(lastBuildDate, formatter);
+        }
+
+        /**
+         * 네이버 뉴스 리스트
+         */
         @ToString
         @Getter
         @NoArgsConstructor
         public static class NewsItem {
+
             private String title;
             private String description;
             private String link;
-            /*private String pubDate;*/
+            private LocalDateTime pubDate;
+
+            public void setPubDate(String pubDate) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+                this.pubDate = LocalDateTime.parse(pubDate, formatter);
+            }
         }
     }
 }

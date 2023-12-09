@@ -60,7 +60,24 @@
                         }),
                     */
                     success : function(res) { // 결과 성공 콜백함수
-                        $('#view-newsKeyword').text(res.keyword)
+                        $('#view-newsKeyword').text(res.keyword) // 검색어 세팅
+
+                        $('#newsList').empty();
+                        $.each(res.news.items, function(index, e) {
+                            var newsItemHtml = `
+                                <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1 newsTitle">${e.title}</h5>
+                                        <small class="newsDate">${e.pubDate.substring(0, 16)}</small>
+                                    </div>
+                                    <p class="mb-1 text-start newsDec">${e.description}</p>
+                                </a>
+                            `;
+
+                            $('#newsList').append(newsItemHtml);
+                        });
+
+                        titleLength();
                     },
                     error : function(request, status, error) { // 결과 에러 콜백함수
                         console.log(error)
@@ -68,7 +85,20 @@
                 })
             })
 
-            console.log([[${news}]])
+            // 뉴스 기사 제목 글자수 줄이기
+            function titleLength() {
+                var maxSize = 33;
+
+                $('.newsTitle').each(function(i, e) {
+                    var text = $(this).text();
+
+                    if (text.length > maxSize) {
+                        var truncatedText = text.substring(0, maxSize) + " ...";
+                        $(this).text(truncatedText);
+                    }
+                })
+            }
+            titleLength();
         });
     </script>
 
@@ -253,44 +283,35 @@
                     </th:block>
                 </div>
                 <div class="overflow-auto" style="max-height: 370px">
-                <div class="list-group">
-                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">
-                                Lorem ipsum dolor sit amet
-                            </h5>
-                            <small>2023-12-05 14:20</small>
-                        </div>
-                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus. Accusantium alias consequatur dicta facilis incidunt nulla rerum tempora? At corporis dolores ducimus perspiciatis ...</p>
-                    </a>
-                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">
-                                Lorem ipsum dolor
-                            </h5>
-                            <small>2023-12-05 14:20</small>
-                        </div>
-                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus.</p>
-                    </a>
-                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">
-                                Lorem ipsum dolor sit
-                            </h5>
-                            <small>2023-12-05 14:20</small>
-                        </div>
-                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus. Accusantium alias consequatur dicta facilis incidunt nulla rerum tempora?</p>
-                    </a>
-                    <a href="https://www.naver.com" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">
-                                Lorem ipsum
-                            </h5>
-                            <small>2023-12-05 14:20</small>
-                        </div>
-                        <p class="mb-1 text-start">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, aspernatur deleniti impedit non quaerat temporibus. Accusantium alias consequatur dicta facilis incidunt nulla rerum tempora? At corporis dolores ducimus perspiciatis ...</p>
-                    </a>
-                </div>
+                    <div class="list-group" id="newsList">
+                        <!-- 비로그인 -->
+                        <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
+                            <a href="#" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">
+                                        로그인 이후에 이용하실 수 있습니다.
+                                    </h5>
+                                    <small></small>
+                                </div>
+                                <p class="mb-1 text-start"></p>
+                            </a>
+                        </th:block>
+
+                        <!-- 로그인 -->
+                        <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                            <th:block th:each="e: ${news.items}">
+                                <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1 newsTitle" th:utext="${e.title}">
+                                            뉴스 제목
+                                        </h5>
+                                        <small class="newsDate" th:text="${e.pubDate}">뉴스 일자</small>
+                                    </div>
+                                    <p class="mb-1 text-start newsDec" th:utext="${e.description}">뉴스 내용</p>
+                                </a>
+                            </th:block>
+                        </th:block>
+                    </div>
                 </div>
             </div>
 
@@ -357,7 +378,9 @@
             <div class="col">
                 <h1 class="text-start"><span class="badge bg-dark">지도</span></h1>
                 <div style="background-color: aquamarine; height: 500px">
-                    map
+                    <p>
+                        <b>test</b> test
+                    </p>
                 </div>
 
             </div>
