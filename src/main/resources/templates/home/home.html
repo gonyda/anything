@@ -15,11 +15,15 @@
         .message-item {
             margin-bottom: 50px;
         }
+
+        b {
+            color: crimson;
+        }
     </style>
 
     <script th:inline="javascript">
         $(document).ready(function () {
-
+            // 자비스 단축키로 열기
             $(document).keydown(function (e) {
                 if (e.metaKey && e.key === "j") {
                     e.preventDefault();
@@ -33,14 +37,47 @@
                 $('#searchInput').focus();
             });
 
+            // 달력 지난 일 선택불가
             function setMinTime() {
                 var d= new Date()
                 $('#datetimeInput').prop('min', new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16));
             }
             setMinTime()
 
-            $('#btn-searchNews').click('click', function() {
+            // 뉴스 기사 제목 글자수 줄이기
+            function titleLength() {
+                var maxSize = 33;
+
+                $('.newsTitle').each(function(i, e) {
+                    var text = $(this).text();
+
+                    if (text.length > maxSize) {
+                        var truncatedText = text.substring(0, maxSize) + "... ";
+                        $(this).text(truncatedText);
+                    }
+                })
+            }
+            titleLength();
+
+            // enter key 이벤트
+            $('#val-newsKeyword').keypress(function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    callbackSearchNews(); // 검색 함수 호출
+                }
+            });
+
+            // 뉴스 검색 이벤트 등록
+            $('#btn-searchNews').click(callbackSearchNews)
+
+            // 뉴스 검색 이벤트
+            function callbackSearchNews() {
                 var keyword = $('#val-newsKeyword').val();
+
+                if (![[${#authorization.expression('isAuthenticated()')}]]) {
+                    alert('로그인 이후에 이용하실 수 있습니다.')
+                    return false;
+                }
 
                 if(!keyword) {
                     alert('검색어를 입력해주세요.')
@@ -60,9 +97,12 @@
                         }),
                     */
                     success : function(res) { // 결과 성공 콜백함수
-                        $('#view-newsKeyword').text(res.keyword) // 검색어 세팅
+                        $('#view-newsKeyword').text('@' + res.keyword) // 검색어 세팅
 
+                        // 뉴스리스트 지우기
                         $('#newsList').empty();
+
+                        // 새로운 news list
                         $.each(res.news.items, function(index, e) {
                             var newsItemHtml = `
                                 <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
@@ -77,28 +117,14 @@
                             $('#newsList').append(newsItemHtml);
                         });
 
+                        // 뉴스 제목 자르기
                         titleLength();
                     },
                     error : function(request, status, error) { // 결과 에러 콜백함수
                         console.log(error)
                     }
                 })
-            })
-
-            // 뉴스 기사 제목 글자수 줄이기
-            function titleLength() {
-                var maxSize = 33;
-
-                $('.newsTitle').each(function(i, e) {
-                    var text = $(this).text();
-
-                    if (text.length > maxSize) {
-                        var truncatedText = text.substring(0, maxSize) + " ...";
-                        $(this).text(truncatedText);
-                    }
-                })
             }
-            titleLength();
         });
     </script>
 
@@ -267,26 +293,21 @@
                         <span class="badge bg-dark">뉴스</span>
                     </h1>
                     <h4 class="text-start" style="margin-left: 10px">
-                        <span style="color: darkgrey" id="view-newsKeyword" th:text="${keyword}">@애플</span>
+                        <span style="color: darkgrey" id="view-newsKeyword" th:text="${keyword} ? ${'@' + keyword} : ''">@키워드</span>
                     </h4>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">@</span>
                     <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" id="val-newsKeyword">
-                    <!-- 비로그인 -->
-                    <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
-                        <button class="btn btn-dark" type="button" onclick="alert('로그인 이후에 이용해 주세요.')">검색</button>
-                    </th:block>
-                    <!-- 로그인 -->
-                    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
-                        <button class="btn btn-dark" type="button" id="btn-searchNews">검색</button>
-                    </th:block>
+                    </script>
+                    <button class="btn btn-dark" type="button" id="btn-searchNews">검색</button>
                 </div>
                 <div class="overflow-auto" style="max-height: 370px">
                     <div class="list-group" id="newsList">
+                        <!------------------------------------------ 뉴스 start ------------------------------------------>
                         <!-- 비로그인 -->
                         <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
-                            <a href="#" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">
                                         로그인 이후에 이용하실 수 있습니다.
@@ -299,18 +320,33 @@
 
                         <!-- 로그인 -->
                         <th:block th:if="${#authorization.expression('isAuthenticated()')}">
-                            <th:block th:each="e: ${news.items}">
-                                <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                            <th:block th:if="${news != null}">
+                                <th:block th:each="e: ${news.items}">
+                                    <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1 newsTitle" th:utext="${e.title}">
+                                                뉴스 제목
+                                            </h5>
+                                            <small class="newsDate" th:text="${e.pubDate}">뉴스 일자</small>
+                                        </div>
+                                        <p class="mb-1 text-start newsDec" th:utext="${e.description}">뉴스 내용</p>
+                                    </a>
+                                </th:block>
+                            </th:block>
+
+                            <th:block th:if="${news == null}">
+                                <a href="#" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1 newsTitle" th:utext="${e.title}">
-                                            뉴스 제목
+                                        <h5 class="mb-1">
+                                            현재 저장 된 검색어가 존재하지 않습니다.
                                         </h5>
-                                        <small class="newsDate" th:text="${e.pubDate}">뉴스 일자</small>
+                                        <small></small>
                                     </div>
-                                    <p class="mb-1 text-start newsDec" th:utext="${e.description}">뉴스 내용</p>
+                                    <p class="mb-1 text-start"></p>
                                 </a>
                             </th:block>
                         </th:block>
+                        <!------------------------------------------ 뉴스 end ------------------------------------------>
                     </div>
                 </div>
             </div>
@@ -322,7 +358,7 @@
                     <span class="input-group-text">내용</span>
                     <input type="text" class="form-control" aria-label="Username">
                     <span class="input-group-text">시간</span>
-                    <input type="datetime-local" class="form-control" aria-label="Server">
+                    <input type="datetime-local" class="form-control" aria-label="Server" id="datetimeInput">
                     <button class="btn btn-dark" type="button">등록</button>
                 </div>
                 <div class="overflow-auto" style="max-height: 370px">

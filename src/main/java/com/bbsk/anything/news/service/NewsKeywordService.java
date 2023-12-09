@@ -36,28 +36,35 @@ public class NewsKeywordService {
 
     @Transactional
     public ResponseSearchNewsDto searchNews(String keyword, String userId) {
-        if (keyword != null) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 조회되지 않습니다."));
+
+        // 파라미터가 null 아니라면
+        if (!StringUtils.isEmpty(keyword)) {
             NewsKeyword newsKeyword = newsKeywordRepository.findByKeyword(keyword);
 
+            // keyword insert
+            // OR
+            // keyword update count +1
             newsKeyword = newsKeywordRepository.save(
                     newsKeyword == null ? new NewsKeyword().initKeyword(keyword) :
-                            newsKeyword.updateSearchCount()
+                                          newsKeyword.updateSearchCount()
             );
 
-            userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 조회되지 않습니다."))
-                    .updateKeyword(newsKeyword);
+            // 유저 keyword 세팅
+            user.updateKeyword(newsKeyword);
 
-            return new ResponseSearchNewsDto(StringUtils.join("@", keyword), getNews(keyword));
+            return new ResponseSearchNewsDto(keyword, getNews(keyword));
 
         } else {
-            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 조회되지 않습니다."));
-
+            // 유저가 keyword를 가지고 있는 지
             if (user.getNewsKeyword() == null) {
                 return new ResponseSearchNewsDto("", null);
             } else {
+                // keyword count +1
                 user.getNewsKeyword().updateSearchCount();
-                return new ResponseSearchNewsDto(StringUtils.join("@", user.getNewsKeyword().getKeyword())
-                        , getNews(user.getNewsKeyword().getKeyword()));
+
+                String userKeyword = user.getNewsKeyword().getKeyword();
+                return new ResponseSearchNewsDto(userKeyword, getNews(userKeyword));
             }
         }
     }
@@ -68,6 +75,20 @@ public class NewsKeywordService {
      * @return
      */
     private News getNews(String keyword) {
+        ObjectMapper objectMapper = ObjectMapperHolder.INSTANCE.get();
+        try {
+            return objectMapper.readValue(naverNewsApiConnect(keyword).getBody(), News.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    /**
+     * 네이버 뉴스api 요청
+     * @param keyword
+     * @return
+     */
+    private ResponseEntity<String> naverNewsApiConnect(String keyword) {
         ByteBuffer buffer = StandardCharsets.UTF_8.encode(keyword);
         String query = StandardCharsets.UTF_8.decode(buffer).toString();
 
@@ -80,30 +101,21 @@ public class NewsKeywordService {
                 .toUri();
 
         RequestEntity<Void> req = RequestEntity
-                .get(uri)
+                .get(uri) // http method (get, post, ...)
                 .header("X-Naver-Client-Id", NaverAPI.CLIENT_ID.getValue())
                 .header("X-Naver-Client-Secret", NaverAPI.CLIENT_SECRET.getValue())
                 .build();
 
-        ResponseEntity<String> result = new RestTemplate().exchange(req, String.class);
-
-        ObjectMapper objectMapper = ObjectMapperHolder.INSTANCE.get();
-        try {
-            return objectMapper.registerModule(new JavaTimeModule())
-                                .readValue(result.getBody(), News.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return new RestTemplate().exchange(req, String.class);
     }
 
     /**
-     * news 응답 dto
+     * 응답 dto
      */
     @Getter
     @AllArgsConstructor
     @ToString
     public class ResponseSearchNewsDto {
-
         private String keyword;
         private News news;
     }

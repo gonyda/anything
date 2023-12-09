@@ -14,10 +14,5 @@ public enum NaverAPI {
     URI ("https://openapi.naver.com"),
     PATH ("/v1/search/news.json");
 
-
     private String value;
-
-    public String getUrl(String keyword) {
-        return String.format(value, keyword);
-    }
 }
