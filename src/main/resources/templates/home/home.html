@@ -97,8 +97,6 @@
                         }),
                     */
                     success : function(res) { // 결과 성공 콜백함수
-                        $('#view-newsKeyword').text('@' + res.keyword) // 검색어 세팅
-
                         // 뉴스리스트 지우기
                         $('#newsList').empty();
 
@@ -292,13 +290,11 @@
                     <h1 class="text-start">
                         <span class="badge bg-dark">뉴스</span>
                     </h1>
-                    <h4 class="text-start" style="margin-left: 10px">
-                        <span style="color: darkgrey" id="view-newsKeyword" th:text="${keyword} ? ${'@' + keyword} : ''">@키워드</span>
-                    </h4>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">@</span>
-                    <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" id="val-newsKeyword">
+                    <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
+                           id="val-newsKeyword" th:value="${keyword} ?: ''">
                     </script>
                     <button class="btn btn-dark" type="button" id="btn-searchNews">검색</button>
                 </div>

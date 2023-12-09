@@ -1,12 +1,11 @@
 package com.bbsk.anything;
 
-import com.bbsk.anything.news.service.NewsKeywordService;
-import com.bbsk.anything.news.service.NewsKeywordService.ResponseSearchNewsDto;
+import com.bbsk.anything.news.service.NewsService;
+import com.bbsk.anything.news.service.NewsService.ResponseSearchNewsDto;
 import com.bbsk.anything.user.dto.RequestUserDto;
 import com.bbsk.anything.user.entity.User;
 import com.bbsk.anything.user.service.UserService;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,14 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class HomeController {
 
     private final UserService userService;
-    private final NewsKeywordService newsKeywordService;
+    private final NewsService newsService;
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal User user, Model model) {
 
         // 회원
         if (user != null) {
-            ResponseSearchNewsDto dto = newsKeywordService.searchNews(null, user.getUserId());
+            ResponseSearchNewsDto dto = newsService.searchNews(null, user.getUserId());
             model.addAttribute("keyword", dto.getKeyword());
             model.addAttribute("news", dto.getNews());
         }

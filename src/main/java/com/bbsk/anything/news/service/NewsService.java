@@ -8,7 +8,6 @@ import com.bbsk.anything.user.repository.UserRepository;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.RequestEntity;
@@ -29,48 +28,46 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class NewsKeywordService {
+public class NewsService {
 
     private final NewsKeywordRepository newsKeywordRepository;
     private final UserRepository userRepository;
 
+    /**
+     * 뉴스 검색
+     * @param keyword
+     * @param userId
+     * @return
+     */
     @Transactional
     public ResponseSearchNewsDto searchNews(String keyword, String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 조회되지 않습니다."));
+        User user = userRepository.findById(userId).orElseThrow(IllegalAccessError::new);
 
-        // 파라미터가 null 아니라면
-        if (!StringUtils.isEmpty(keyword)) {
-            NewsKeyword newsKeyword = newsKeywordRepository.findByKeyword(keyword);
-
-            // keyword insert
-            // OR
-            // keyword update count +1
-            newsKeyword = newsKeywordRepository.save(
-                    newsKeyword == null ? new NewsKeyword().initKeyword(keyword) :
-                                          newsKeyword.updateSearchCount()
-            );
-
-            // 유저 keyword 세팅
-            user.updateKeyword(newsKeyword);
-
-            return new ResponseSearchNewsDto(keyword, getNews(keyword));
-
-        } else {
+        if (StringUtils.isEmpty(keyword)) {
             // 유저가 keyword를 가지고 있는 지
             if (user.getNewsKeyword() == null) {
                 return new ResponseSearchNewsDto("", null);
             } else {
                 // keyword count +1
                 user.getNewsKeyword().updateSearchCount();
-
-                String userKeyword = user.getNewsKeyword().getKeyword();
-                return new ResponseSearchNewsDto(userKeyword, getNews(userKeyword));
             }
+        } else {
+            NewsKeyword findKeyword = newsKeywordRepository.findByKeyword(keyword);
+
+            // 유저 keyword 세팅
+            user.updateKeyword(
+                    findKeyword == null ?
+                    newsKeywordRepository.save(new NewsKeyword().initKeyword(keyword)) : // keyword insert
+                    findKeyword.updateSearchCount() // keyword count +1
+            );
         }
+
+        String userKeyword = user.getNewsKeyword().getKeyword();
+        return new ResponseSearchNewsDto(userKeyword, getNews(userKeyword));
     }
 
     /**
-     * 네이버 검색API, 뉴스
+     * 네이버 뉴스 가져오기
      * @param keyword
      * @return
      */
@@ -84,7 +81,7 @@ public class NewsKeywordService {
     }
 
     /**
-     * 네이버 뉴스api 요청
+     * 네이버 뉴스 API 호출
      * @param keyword
      * @return
      */
@@ -100,21 +97,21 @@ public class NewsKeywordService {
                 .build()
                 .toUri();
 
-        RequestEntity<Void> req = RequestEntity
+        RequestEntity<Void> request = RequestEntity
                 .get(uri) // http method (get, post, ...)
                 .header("X-Naver-Client-Id", NaverAPI.CLIENT_ID.getValue())
                 .header("X-Naver-Client-Secret", NaverAPI.CLIENT_SECRET.getValue())
                 .build();
 
-        return new RestTemplate().exchange(req, String.class);
+        return new RestTemplate().exchange(request, String.class);
     }
 
     /**
      * 응답 dto
      */
     @Getter
-    @AllArgsConstructor
     @ToString
+    @AllArgsConstructor
     public class ResponseSearchNewsDto {
         private String keyword;
         private News news;
@@ -125,7 +122,6 @@ public class NewsKeywordService {
      */
     @Getter
     @ToString
-    @NoArgsConstructor
     public static class News {
 
         private LocalDateTime lastBuildDate;
@@ -134,8 +130,7 @@ public class NewsKeywordService {
         private List<NewsItem> items;
 
         public void setLastBuildDate(String lastBuildDate) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-            this.lastBuildDate = LocalDateTime.parse(lastBuildDate, formatter);
+            this.lastBuildDate = jasonToLocalDateTime(lastBuildDate);
         }
 
         /**
@@ -143,7 +138,6 @@ public class NewsKeywordService {
          */
         @ToString
         @Getter
-        @NoArgsConstructor
         public static class NewsItem {
 
             private String title;
@@ -152,9 +146,13 @@ public class NewsKeywordService {
             private LocalDateTime pubDate;
 
             public void setPubDate(String pubDate) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-                this.pubDate = LocalDateTime.parse(pubDate, formatter);
+                this.pubDate = jasonToLocalDateTime(pubDate);
             }
+        }
+
+        private static LocalDateTime jasonToLocalDateTime(String lastBuildDate) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+            return LocalDateTime.parse(lastBuildDate, formatter);
         }
     }
 }
