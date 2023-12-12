@@ -29,9 +29,9 @@ public class NaverNewsApiService {
      * @return
      */
     public News getNews(String keyword) {
-        ObjectMapper objectMapper = ObjectMapperHolder.INSTANCE.get();
         try {
-            return objectMapper.readValue(naverNewsApiConnect(keyword).getBody(), News.class);
+            return ObjectMapperHolder.INSTANCE.get()
+                    .readValue(naverNewsApiConnect(keyword).getBody(), News.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
