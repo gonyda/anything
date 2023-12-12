@@ -3,7 +3,6 @@ package com.bbsk.anything.news.service;
 import com.bbsk.anything.news.constant.NaverAPI;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.http.RequestEntity;

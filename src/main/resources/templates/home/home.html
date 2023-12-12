@@ -318,7 +318,7 @@
                         <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                             <th:block th:if="${news != null}">
                                 <th:block th:each="e: ${news.items}">
-                                    <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                    <a th:href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1 newsTitle" th:utext="${e.title}">
                                                 뉴스 제목
