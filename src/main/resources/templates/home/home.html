@@ -37,12 +37,7 @@
                 $('#searchInput').focus();
             });
 
-            // 달력 지난 일 선택불가
-            function setMinTime() {
-                var d= new Date()
-                $('#datetimeInput').prop('min', new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16));
-            }
-            setMinTime()
+
         });
     </script>
 
@@ -50,6 +45,8 @@
 <body>
     <!-- news js -->
     <th:block th:replace="~{/fragments/news-script :: fragment-news-script}"></th:block>
+    <!-- schedule js -->
+    <th:block th:replace="~{/fragments/schedule-script :: fragment-schedule-script}"></th:block>
 
     <!-- nav -->
     <th:block th:replace="~{/fragments/nav :: fragment-nav}"></th:block>
@@ -193,9 +190,6 @@
                         </p>
                         <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
                     </li>
-
-
-
                 </ul>
             </div>
 
@@ -276,55 +270,51 @@
                 <h1 class="text-start"><span class="badge bg-dark">일정</span></h1>
                 <div class="input-group mb-3">
                     <span class="input-group-text">내용</span>
-                    <input type="text" class="form-control" aria-label="Username">
+                    <input type="text" class="form-control" id="schedule-content">
                     <span class="input-group-text">시간</span>
-                    <input type="datetime-local" class="form-control" aria-label="Server" id="datetimeInput">
-                    <button class="btn btn-dark" type="button">등록</button>
+                    <input type="datetime-local" class="form-control" aria-label="Server" id="schedule-date">
+                    <button class="btn btn-dark" type="button" id="btn-schedule-register">등록</button>
                 </div>
                 <div class="overflow-auto" style="max-height: 370px">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">2023-12-05 14:00 화요일</h5>
-                            <small class="text-danger">2시간 전</small>
-                        </div>
-                        <p class="mb-1 text-start">점심약속</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">2023-12-05 14:00 화요일</h5>
-                            <small>3일 전</small>
-                        </div>
-                        <p class="mb-1 text-start">점심약속</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">2023-12-05 14:00 화요일</h5>
-                            <small>6일 전</small>
-                        </div>
-                        <p class="mb-1 text-start">점심약속</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">2023-12-05 14:00 화요일</h5>
-                            <small>6일 전</small>
-                        </div>
-                        <p class="mb-1 text-start">점심약속</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">2023-12-05 14:00 화요일</h5>
-                            <small>6일 전</small>
-                        </div>
-                        <p class="mb-1 text-start">점심약속</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">2023-12-05 14:00 화요일</h5>
-                            <small>6일 전</small>
-                        </div>
-                        <p class="mb-1 text-start">점심약속</p>
-                    </a>
+                <div class="list-group" id="scheduleList">
+                    <!-- 비로그인 -->
+                    <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
+                        <a class="list-group-item list-group-item-action" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">로그인 이후에 이용하실 수 있습니다.</h5>
+                                <small></small>
+                            </div>
+                            <p class="mb-1 text-start"></p>
+                        </a>
+                    </th:block>
+
+                    <!-- 로그인 -->
+                    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                        <th:block th:if="${scheduleList != null}">
+                            <th:block th:each="e: ${scheduleList}">
+                                <a class="list-group-item list-group-item-action schedule-list" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1" th:text="|${e.date} ${e.dayOfWeek}|">2023-01-05 23:40</h5>
+                                        <!-- 일정 남은 시간 표시 -->
+                                        <small class="remaining-time"></small>
+                                    </div>
+                                    <p class="mb-1 text-start" th:text="${e.content}">점심약속</p>
+                                </a>
+                            </th:block>
+                        </th:block>
+
+                        <th:block th:if="${scheduleList == null}">
+                            <a class="list-group-item list-group-item-action" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">현재 등록 된 일정이 없습니다.</h5>
+                                    <small></small>
+                                </div>
+                                <p class="mb-1 text-start"></p>
+                            </a>
+                        </th:block>
+                    </th:block>
+
+
                 </div>
                 </div>
             </div>

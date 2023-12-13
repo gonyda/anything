@@ -1,6 +1,7 @@
 package com.bbsk.anything.user.entity;
 
 import com.bbsk.anything.news.entity.NewsKeyword;
+import com.bbsk.anything.schedule.entity.Schedule;
 import com.bbsk.anything.security.serivce.Sha512CustomPasswordEncoder;
 import com.bbsk.anything.user.dto.RequestUserDto;
 import jakarta.persistence.*;
@@ -11,7 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @ToString
@@ -25,6 +28,9 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keywordId")
     private NewsKeyword newsKeyword;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Schedule> scheduleList = new ArrayList<>();
 
     @Column(nullable = false)
     private String userPw;

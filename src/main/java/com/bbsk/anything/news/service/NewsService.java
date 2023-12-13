@@ -59,7 +59,7 @@ public class NewsService {
     @Getter
     @ToString
     @AllArgsConstructor
-    public class ResponseSearchNewsDto {
+    public static class ResponseSearchNewsDto {
         private String keyword;
         private News news;
     }

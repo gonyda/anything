@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-schedule-script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            // 달력 지난 일 선택불가
+            function setMinTime() {
+                var d= new Date()
+                $('#schedule-date').prop('min', new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16));
+            }
+            setMinTime()
+
+            // 일정등록 시간, 현재시간으로 세팅
+            function getCurrentDateTime() {
+                const offset = new Date().getTimezoneOffset() * 60000
+                const now = new Date(Date.now() - offset);
+
+                // 현재 날짜와 시간을 YYYY-MM-DDTHH:mm 형식으로 변환
+                const formattedDateTime = now.toISOString().slice(0, 16);
+
+                return formattedDateTime;
+            }
+            $('#schedule-date').val(getCurrentDateTime());
+
+            // 남은 시간 업데이트 함수
+            function updateRemainingTime() {
+                // 각 리스트 항목에 대해 남은 시간 계산 및 표시
+                $(".schedule-list").each(function () {
+                    var targetDate = new Date($(this).find("h5").text().substring(0, 16));
+                    var now = new Date();
+
+                    var timeDiff = targetDate - now;
+                    var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+                    var remainingTime = "";
+                    if (days > 0) {
+                        remainingTime += days + "일 ";
+                    }
+                    if (hours > 0) {
+                        remainingTime += hours + "시간 ";
+                    }
+                    if (minutes > 0) {
+                        remainingTime += minutes + "분";
+                    }
+
+                    $(this).find(".remaining-time").text(remainingTime);
+
+                    // 59분 이내일 경우 글씨를 빨갛게 설정
+                    if (days == 0 && hours == 0 && minutes <= 59) {
+                        $(this).find(".remaining-time").css("color", "crimson");
+                        $(this).find(".remaining-time").css("font-weight", "bold");
+                    }
+                });
+            }
+            // 초기에 한 번 업데이트
+            updateRemainingTime();
+            // 1분마다 업데이트
+            setInterval(updateRemainingTime, 60000);
+
+            // 일정 등록 콜백 함수 지정
+            $('#btn-schedule-register').click(callbackScheduleRegister)
+
+            // 일정 등록 이벤트
+            function callbackScheduleRegister() {
+                var content = $('#schedule-content').val();
+                var date = $('#schedule-date').val();
+
+                if (![[${#authorization.expression('isAuthenticated()')}]]) {
+                    alert('로그인 이후에 이용하실 수 있습니다.')
+                    return false;
+                }
+
+                if(!content) {
+                    alert('내용을 입력해주세요.')
+                    return false;
+                }
+
+                if(!date) {
+                    alert('시간을 입력해주세요.')
+                    return false;
+                }
+
+                $.ajax({
+                    type : 'post',           // 타입 (get, post, put 등등)
+                    url : '/schedule',           // 요청할 서버url
+                    dataType : 'json',       // 데이터 타입 (html, xml, json, text 등등)
+                    headers : {              // Http header
+                        "Content-Type" : "application/json"
+                    },
+                    data : JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                        "content" : content,
+                        "date" : date
+                    }),
+                    success : function(res) { // 결과 성공 콜백함수
+                        // 일정 리스트 지우기
+                        $('#scheduleList').empty();
+
+                        // 새로운 일정 list
+                        $.each(res, function(index, e) {
+                            var scheduleItemHtml = `
+                                <a class="list-group-item list-group-item-action schedule-list" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">${e.date.substring(0, 16)} ${e.dayOfWeek}</h5>
+                                        <small class="remaining-time"></small>
+                                    </div>
+                                    <p class="mb-1 text-start">${e.content}</p>
+                                </a>
+                            `;
+                            $('#scheduleList').append(scheduleItemHtml);
+                        });
+                        // 일정 남은 시간 계산
+                        updateRemainingTime();
+                    },
+                    error : function(request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+            }
+        });
+    </script>
+</head>
