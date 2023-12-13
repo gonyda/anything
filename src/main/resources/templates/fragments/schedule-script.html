@@ -3,6 +3,14 @@
 <head th:fragment="fragment-schedule-script">
     <script th:inline="javascript">
         $(document).ready(function () {
+            // 날짜 포맷팅
+            function formatISODateToCustomFormat(date) {
+                var parts = date.split('T');
+                // 날짜와 시간을 공백으로 연결
+                var formattedDate = parts[0] + ' ' + parts[1];
+                return formattedDate;
+            }
+
             // 달력 지난 일 선택불가
             function setMinTime() {
                 var d= new Date()
@@ -102,7 +110,9 @@
                             var scheduleItemHtml = `
                                 <a class="list-group-item list-group-item-action schedule-list" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1">${e.date.substring(0, 16)} ${e.dayOfWeek}</h5>
+                                        <h5 class="mb-1">${formatISODateToCustomFormat(e.date.substring(0, 16))} ${e.dayOfWeek}</h5>
+                                        <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
+                                            id="${e.scheduleId}"></i>
                                         <small class="remaining-time"></small>
                                     </div>
                                     <p class="mb-1 text-start">${e.content}</p>
@@ -118,6 +128,51 @@
                     }
                 })
             }
+
+            // 일정 삭제 콜백 함수 지정
+            $('#scheduleList').on('click', '.btn-delete-schedule', function() {
+                var scheduleId = $(this).attr('id');
+
+                $.ajax({
+                    type : 'delete',           // 타입 (get, post, put 등등)
+                    url : '/schedule/' + scheduleId,           // 요청할 서버url
+                    /*
+                        dataType : 'json',       // 데이터 타입 (html, xml, json, text 등등)
+                        headers : {              // Http header
+                            "Content-Type" : "application/json"
+                        },
+                        data : JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                            "content" : content,
+                            "date" : date
+                        }),
+                    */
+                    success : function(res) { // 결과 성공 콜백함수
+                        // 일정 리스트 지우기
+                        $('#scheduleList').empty();
+
+                        // 새로운 일정 list
+                        $.each(res, function(index, e) {
+                            var scheduleItemHtml = `
+                                <a class="list-group-item list-group-item-action schedule-list" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">${formatISODateToCustomFormat(e.date.substring(0, 16))} ${e.dayOfWeek}</h5>
+                                        <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
+                                            id="${e.scheduleId}"></i>
+                                        <small class="remaining-time"></small>
+                                    </div>
+                                    <p class="mb-1 text-start">${e.content}</p>
+                                </a>
+                            `;
+                            $('#scheduleList').append(scheduleItemHtml);
+                        });
+                        // 일정 남은 시간 계산
+                        updateRemainingTime();
+                    },
+                    error : function(request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+            })
         });
     </script>
 </head>

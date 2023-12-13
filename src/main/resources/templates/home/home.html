@@ -19,6 +19,10 @@
         b {
             color: crimson;
         }
+
+        .bi-trash:hover {
+            cursor: pointer;
+        }
     </style>
 
     <script th:inline="javascript">
@@ -31,7 +35,7 @@
                 }
             });
 
-            // Offcanvas가 표시된 후에 실행되는 이벤트 핸들러 추가
+            // 자비스창 열리고 input창으로 포커스
             $('#offcanvasDarkNavbar').on('shown.bs.offcanvas', function () {
                 // 1초 후에 실행되도록 설정
                 $('#searchInput').focus();
@@ -241,7 +245,7 @@
                                             <h5 class="mb-1 newsTitle" th:utext="${e.title}">
                                                 뉴스 제목
                                             </h5>
-                                            <small class="newsDate" th:text="${e.pubDate}">뉴스 일자</small>
+                                            <small class="newsDate" th:text="${#temporals.format(e.pubDate, 'yyyy-MM-dd HH:mm')}">뉴스 일자</small>
                                         </div>
                                         <p class="mb-1 text-start newsDec" th:utext="${e.description}">뉴스 내용</p>
                                     </a>
@@ -292,14 +296,16 @@
                     <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                         <th:block th:if="${scheduleList != null}">
                             <th:block th:each="e: ${scheduleList}">
-                                <a class="list-group-item list-group-item-action schedule-list" aria-current="true">
+                                <div class="list-group-item list-group-item-action schedule-list" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1" th:text="|${e.date} ${e.dayOfWeek}|">2023-01-05 23:40</h5>
+                                        <h5 class="mb-1" th:text="${#temporals.format(e.date, 'yyyy-MM-dd HH:mm')} + ' ' + ${e.dayOfWeek}">2023-01-05 23:40</h5>
+                                        <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
+                                        th:id="${e.scheduleId}"></i>
                                         <!-- 일정 남은 시간 표시 -->
                                         <small class="remaining-time"></small>
                                     </div>
                                     <p class="mb-1 text-start" th:text="${e.content}">점심약속</p>
-                                </a>
+                                </div>
                             </th:block>
                         </th:block>
 

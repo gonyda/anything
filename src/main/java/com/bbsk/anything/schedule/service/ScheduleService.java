@@ -1,6 +1,5 @@
 package com.bbsk.anything.schedule.service;
 
-import com.bbsk.anything.news.constant.NaverAPI;
 import com.bbsk.anything.schedule.entity.Schedule;
 import com.bbsk.anything.schedule.repository.ScheduleRepository;
 import lombok.Getter;
@@ -26,7 +25,7 @@ public class ScheduleService {
     public List<ResponseScheduleDto> findAllByUserId(String userId) {
         List<ResponseScheduleDto> list = new ArrayList<>();
 
-        scheduleRepository.findAllByUserUserIdOrderByDateAsc(userId).stream().forEach(e ->{
+        scheduleRepository.findAllByUserId(userId).stream().forEach(e ->{
             list.add(new ResponseScheduleDto().toDto(e));
         });
 
@@ -39,6 +38,12 @@ public class ScheduleService {
         scheduleRepository.save(new Schedule().toEntity(dto));
 
         return findAllByUserId(dto.getUser().getUserId());
+    }
+
+    @Transactional
+    public List<ResponseScheduleDto> delete(Long id, String userId) {
+        scheduleRepository.deleteById(id);
+        return findAllByUserId(userId);
     }
 
     @Getter

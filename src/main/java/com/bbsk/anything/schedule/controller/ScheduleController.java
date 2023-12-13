@@ -8,9 +8,7 @@ import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +25,12 @@ public class ScheduleController {
     public ResponseEntity<List<ResponseScheduleDto>> register(@RequestBody RequestScheduleDto dto, @AuthenticationPrincipal User user) {
 
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.save(dto.setUser(user)));
+    }
+
+    @DeleteMapping("/schedule/{id}")
+    public ResponseEntity<List<ResponseScheduleDto>> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.delete(id, user.getUserId()));
     }
 
     @Getter
