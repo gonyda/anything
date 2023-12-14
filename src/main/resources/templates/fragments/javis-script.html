@@ -25,6 +25,9 @@
                 $('#javisInput').focus();
             });
 
+            // 자비스 채팅창 스크롤 맨 밑으로
+            $('#wrap-javis').animate({ scrollTop: $(document).height() }, "slow");
+
             // enter key 이벤트
             $('#javisInput').keypress(function(e) {
                 if (e.which === 13) {
@@ -57,6 +60,7 @@
 
                 // 현재 채팅 가져오기
                 var messages = getChatList();
+                console.log(messages);
 
                 $.ajax({
                     type : 'post',           // 타입 (get, post, put 등등)
@@ -70,7 +74,17 @@
                         "createTime" : getMessageTime()
                     }),
                     success : function(res) { // 결과 성공 콜백함수
-                        console.log(res)
+                        var newChatHtml =
+                        `
+                            <li class="nav-item message-item">
+                                <p>
+                                    <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
+                                </p>
+                                <span class="chat-item">${res.message}</span>
+                            </li>
+                        `;
+                        $('#chat-list').append(newChatHtml);
+                        $('#wrap-javis').animate({ scrollTop: $(document).height() }, "slow");
                     },
                     error : function(request, status, error) { // 결과 에러 콜백함수
                         console.log(error)
@@ -83,7 +97,9 @@
                 var chatList = [];
                 $(".message-item").each(function () {
                     chatList.push({
-                        role : $(this).find("p").find("span").first().text(),
+                        role : $(this).find("p").find("span").first().text() == 'User' ?
+                                'user' :
+                                'assistant',
                         content : $(this).find("span").last().text()
                     })
                 });
@@ -99,13 +115,14 @@
                 `
                     <li class="nav-item message-item">
                         <p>
-                            <span class="badge bg-info" style="font-size: 20px">user</span>
+                            <span class="badge text-bg-light" style="font-size: 20px">User</span>
                             <span style="color: darkgray">${now}</span>
                         </p>
                         <span class="chat-item">${message}</span>
                     </li>
                 `;
                 $('#chat-list').append(newChatHtml);
+                $('#wrap-javis').animate({ scrollTop: $(document).height() }, "slow");
             }
 
             function getMessageTime() {

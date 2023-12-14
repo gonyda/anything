@@ -1,5 +1,8 @@
 package com.bbsk.anything;
 
+import com.bbsk.anything.javis.entity.Javis;
+import com.bbsk.anything.javis.service.JavisService;
+import com.bbsk.anything.javis.service.JavisService.ResponseGptChat;
 import com.bbsk.anything.news.service.NewsService;
 import com.bbsk.anything.news.service.NewsService.ResponseSearchNewsDto;
 import com.bbsk.anything.schedule.service.ScheduleService;
@@ -24,17 +27,21 @@ public class HomeController {
     private final UserService userService;
     private final NewsService newsService;
     private final ScheduleService scheduleService;
+    private final JavisService javisService;
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal User user, Model model) {
 
-        // 회원
         if (user != null) {
+            // 뉴스 가져오기
             ResponseSearchNewsDto dto = newsService.searchNews(null, user.getUserId());
             model.addAttribute("keyword", dto.getKeyword());
             model.addAttribute("news", dto.getNews());
+            // 일정 가져오기
             List<ResponseScheduleDto> list = scheduleService.findAllByUserId(user.getUserId());
             model.addAttribute("scheduleList", list.isEmpty() ? null : list);
+            // 자비스 채팅 가져오기
+            model.addAttribute("chat", javisService.findAllByUser(user.getUserId()));
         }
 
         return "home/home";

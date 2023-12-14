@@ -33,7 +33,7 @@ public class Javis {
     @Column(nullable = false)
     private String model; // 사용 gpt모델
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String message; // 메시지
 
     private Long totalTokens;
