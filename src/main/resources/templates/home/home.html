@@ -67,9 +67,10 @@
                                     <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
                                 </th:block>
                             </p>
-                            <span class="chat-item" th:text="${e.message}">채팅 내용</span>
+                            <span class="chat-item" th:utext="${e.message}">채팅 내용</span>
                         </li>
                     </th:block>
+
                 </ul>
             </div>
 

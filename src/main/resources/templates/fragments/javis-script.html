@@ -26,7 +26,7 @@
             });
 
             // 자비스 채팅창 스크롤 맨 밑으로
-            $('#wrap-javis').animate({ scrollTop: $(document).height() }, "slow");
+            $('#wrap-javis').animate({ scrollTop: $('#wrap-javis')[0].scrollHeight }, "slow");
 
             // enter key 이벤트
             $('#javisInput').keypress(function(e) {
@@ -60,8 +60,8 @@
 
                 // 현재 채팅 가져오기
                 var messages = getChatList();
-                console.log(messages);
 
+                toggleSpinner(true);
                 $.ajax({
                     type : 'post',           // 타입 (get, post, put 등등)
                     url : '/javis',           // 요청할 서버url
@@ -83,8 +83,9 @@
                                 <span class="chat-item">${res.message}</span>
                             </li>
                         `;
+                        toggleSpinner(false);
                         $('#chat-list').append(newChatHtml);
-                        $('#wrap-javis').animate({ scrollTop: $(document).height() }, "slow");
+                        $('#wrap-javis').animate({ scrollTop: $('#wrap-javis')[0].scrollHeight }, "slow");
                     },
                     error : function(request, status, error) { // 결과 에러 콜백함수
                         console.log(error)
@@ -122,7 +123,7 @@
                     </li>
                 `;
                 $('#chat-list').append(newChatHtml);
-                $('#wrap-javis').animate({ scrollTop: $(document).height() }, "slow");
+                $('#wrap-javis').animate({ scrollTop: $('#wrap-javis')[0].scrollHeight }, "slow");
             }
 
             function getMessageTime() {
@@ -136,6 +137,25 @@
                 return now;
             }
 
+            // 로딩 스피너 출력
+            function toggleSpinner(toggle) {
+                if(toggle) {
+                    var newChatHtml =
+                    `
+                    <li class="nav-item message-item" id="gpt-chat-spinner">
+                        <p>
+                            <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
+                        </p>
+                        <div class="spinner-border text-success" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </li>
+                    `;
+                    $('#chat-list').append(newChatHtml);
+                } else {
+                    $('#gpt-chat-spinner').remove();
+                }
+            }
         });
     </script>
 </head>
