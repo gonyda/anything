@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-javis-script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            // 날짜 포맷팅
+            function formatISODateToCustomFormat(date) {
+                var parts = date.split('T');
+                // 날짜와 시간을 공백으로 연결
+                var formattedDate = parts[0] + ' ' + parts[1];
+                return formattedDate;
+            }
+
+            // 자비스 단축키로 열기
+            $(document).keydown(function (e) {
+                if (e.metaKey && e.key === "j") {
+                    e.preventDefault();
+                    $('#offcanvasDarkNavbar').offcanvas('toggle');
+                }
+            });
+
+            // 자비스창 열리고 input창으로 포커스
+            $('#offcanvasDarkNavbar').on('shown.bs.offcanvas', function () {
+                // 1초 후에 실행되도록 설정
+                $('#javisInput').focus();
+            });
+
+            // enter key 이벤트
+            $('#javisInput').keypress(function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    callbackJavisChat(); // 함수 호출
+                }
+            });
+
+            // 자비스 채팅 이벤트 등록
+            $('#btn-javis-chat').click(callbackJavisChat)
+
+            // 자비스 채팅 이벤트
+            function callbackJavisChat() {
+                var message = $('#javisInput').val();
+                if (![[${#authorization.expression('isAuthenticated()')}]]) {
+                    alert('로그인 이후에 이용하실 수 있습니다.')
+                    return false;
+                }
+
+                if(!message) {
+                    alert('내용을 작성해주세요.')
+                    return false;
+                }
+
+                // 유저 채팅 출력
+                printUserChat(message);
+
+                // 채팅 input 비우기
+                $('#javisInput').val('');
+
+                // 현재 채팅 가져오기
+                var messages = getChatList();
+
+                $.ajax({
+                    type : 'post',           // 타입 (get, post, put 등등)
+                    url : '/javis',           // 요청할 서버url
+                    dataType : 'json',       // 데이터 타입 (html, xml, json, text 등등)
+                    headers : {              // Http header
+                        "Content-Type" : "application/json"
+                    },
+                    data : JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                        "messages" : messages,
+                        "createTime" : getMessageTime()
+                    }),
+                    success : function(res) { // 결과 성공 콜백함수
+                        console.log(res)
+                    },
+                    error : function(request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+            }
+
+            // 현재 채팅 가져오기
+            function getChatList() {
+                var chatList = [];
+                $(".message-item").each(function () {
+                    chatList.push({
+                        role : $(this).find("p").find("span").first().text(),
+                        content : $(this).find("span").last().text()
+                    })
+                });
+
+                return chatList;
+            }
+
+            // 유저 채팅 출력
+            function printUserChat(message) {
+                var now = getMessageTime();
+
+                var newChatHtml =
+                `
+                    <li class="nav-item message-item">
+                        <p>
+                            <span class="badge bg-info" style="font-size: 20px">user</span>
+                            <span style="color: darkgray">${now}</span>
+                        </p>
+                        <span class="chat-item">${message}</span>
+                    </li>
+                `;
+                $('#chat-list').append(newChatHtml);
+            }
+
+            function getMessageTime() {
+                // 현재 시간을 얻기
+                const currentDateTime = new Date();
+                // 9시간을 더하기
+                currentDateTime.setHours(currentDateTime.getHours() + 9);
+                // ISO 형식으로 변환
+                const now = formatISODateToCustomFormat(currentDateTime.toISOString().replace('Z', '').substring(0, 16));
+
+                return now;
+            }
+
+        });
+    </script>
+</head>

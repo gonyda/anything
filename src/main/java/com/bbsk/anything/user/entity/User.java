@@ -27,9 +27,11 @@ public class User implements UserDetails {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keywordId")
+    @ToString.Exclude
     private NewsKeyword newsKeyword;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Schedule> scheduleList = new ArrayList<>();
 
     @Column(nullable = false)

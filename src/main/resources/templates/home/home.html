@@ -26,23 +26,6 @@
     </style>
 
     <script th:inline="javascript">
-        $(document).ready(function () {
-            // 자비스 단축키로 열기
-            $(document).keydown(function (e) {
-                if (e.metaKey && e.key === "j") {
-                    e.preventDefault();
-                    $('#offcanvasDarkNavbar').offcanvas('toggle');
-                }
-            });
-
-            // 자비스창 열리고 input창으로 포커스
-            $('#offcanvasDarkNavbar').on('shown.bs.offcanvas', function () {
-                // 1초 후에 실행되도록 설정
-                $('#searchInput').focus();
-            });
-
-
-        });
     </script>
 
 </head>
@@ -51,13 +34,17 @@
     <th:block th:replace="~{/fragments/news-script :: fragment-news-script}"></th:block>
     <!-- schedule js -->
     <th:block th:replace="~{/fragments/schedule-script :: fragment-schedule-script}"></th:block>
+    <!-- javis js -->
+    <th:block th:replace="~{/fragments/javis-script :: fragment-javis-script}"></th:block>
 
     <!-- nav -->
     <th:block th:replace="~{/fragments/nav :: fragment-nav}"></th:block>
 
     <!-- 자비스 -->
     <button class="btn btn-dark fixed-left-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
-        <span>Javis <span style="color: darkgrey"><i class="bi bi-command fs-6"></i> + J</span></span>
+        <span>
+            Javis <span style="color: darkgrey"><i class="bi bi-command fs-6"></i> + J</span>
+        </span>
     </button>
 
     <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel"
@@ -68,138 +55,13 @@
         </div>
         <div class="offcanvas-body">
             <div class="overflow-auto" style="max-height: 90%; height: 90%">
-                <ul class="navbar-nav">
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-info" style="font-size: 20px">User</span>
-                            <span style="color: darkgray">2023-08-03 14:23</span>
-                        </p>
-                        <span>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias blanditiis corporis eos impedit laboriosam laborum, laudantium minima molestiae necessitatibus nisi omnis perspiciatis quasi quos sit totam unde voluptas voluptates!
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur dicta distinctio dolorem doloremque, esse id illo incidunt mollitia odio optio possimus praesentium qui quidem, quod, repudiandae ullam velit voluptatem?
-                        </span>
-                    </li>
-
-                    <li class="nav-item message-item">
-                        <p>
-                            <span class="badge bg-secondary" style="font-size: 20px">Javis</span>
-                        </p>
-                        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid amet deleniti distinctio eligendi eum facere, illo incidunt libero maxime non omnis perspiciatis provident repellat sapiente similique sunt? Facilis, odio?</span>
-                    </li>
+                <ul class="navbar-nav" id="chat-list">
                 </ul>
             </div>
 
             <form class="d-flex mt-3" role="search">
-                <input class="form-control me-2" id="searchInput" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-success" type="submit">Search</button>
+                <input class="form-control me-2" id="javisInput" type="text">
+                <button class="btn btn-success" type="button" id="btn-javis-chat">Submit</button>
             </form>
         </div>
     </div>
@@ -220,7 +82,7 @@
                     </script>
                     <button class="btn btn-dark" type="button" id="btn-searchNews">검색</button>
                 </div>
-                <div class="overflow-auto" style="max-height: 370px">
+                <div class="overflow-auto" style="max-height: 75vh">
                     <div class="list-group" id="newsList">
                         <!------------------------------------------ 뉴스 start ------------------------------------------>
                         <!-- 비로그인 -->
@@ -279,49 +141,48 @@
                     <input type="datetime-local" class="form-control" aria-label="Server" id="schedule-date">
                     <button class="btn btn-dark" type="button" id="btn-schedule-register">등록</button>
                 </div>
-                <div class="overflow-auto" style="max-height: 370px">
-                <div class="list-group" id="scheduleList">
-                    <!-- 비로그인 -->
-                    <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
-                        <a class="list-group-item list-group-item-action" aria-current="true">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">로그인 이후에 이용하실 수 있습니다.</h5>
-                                <small></small>
-                            </div>
-                            <p class="mb-1 text-start"></p>
-                        </a>
-                    </th:block>
-
-                    <!-- 로그인 -->
-                    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
-                        <th:block th:if="${scheduleList != null}">
-                            <th:block th:each="e: ${scheduleList}">
-                                <div class="list-group-item list-group-item-action schedule-list" aria-current="true">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1" th:text="${#temporals.format(e.date, 'yyyy-MM-dd HH:mm')} + ' ' + ${e.dayOfWeek}">2023-01-05 23:40</h5>
-                                        <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
-                                        th:id="${e.scheduleId}"></i>
-                                        <!-- 일정 남은 시간 표시 -->
-                                        <small class="remaining-time"></small>
-                                    </div>
-                                    <p class="mb-1 text-start" th:text="${e.content}">점심약속</p>
-                                </div>
-                            </th:block>
-                        </th:block>
-
-                        <th:block th:if="${scheduleList == null}">
+                <div class="overflow-auto" style="max-height: 38vh">
+                    <div class="list-group" id="scheduleList">
+                        <!-- 비로그인 -->
+                        <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
                             <a class="list-group-item list-group-item-action" aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">현재 등록 된 일정이 없습니다.</h5>
+                                    <h5 class="mb-1">로그인 이후에 이용하실 수 있습니다.</h5>
                                     <small></small>
                                 </div>
                                 <p class="mb-1 text-start"></p>
                             </a>
                         </th:block>
-                    </th:block>
 
+                        <!-- 로그인 -->
+                        <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                            <th:block th:if="${scheduleList != null}">
+                                <th:block th:each="e: ${scheduleList}">
+                                    <div class="list-group-item list-group-item-action schedule-list" aria-current="true">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1" th:text="${#temporals.format(e.date, 'yyyy-MM-dd HH:mm')} + ' ' + ${e.dayOfWeek}">2023-01-05 23:40 화요일</h5>
+                                            <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
+                                                th:id="${e.scheduleId}">
+                                            </i>
+                                            <!-- 일정 남은 시간 표시 -->
+                                            <small class="remaining-time"></small>
+                                        </div>
+                                        <p class="mb-1 text-start" th:text="${e.content}">점심약속</p>
+                                    </div>
+                                </th:block>
+                            </th:block>
 
-                </div>
+                            <th:block th:if="${scheduleList == null}">
+                                <a class="list-group-item list-group-item-action" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">현재 등록 된 일정이 없습니다.</h5>
+                                        <small></small>
+                                    </div>
+                                    <p class="mb-1 text-start"></p>
+                                </a>
+                            </th:block>
+                        </th:block>
+                    </div>
                 </div>
             </div>
         </div>
