@@ -30,14 +30,14 @@
 
             // enter key 이벤트
             $('#javisInput').keypress(function(e) {
-                if (e.which === 13) {
+                if (e.which === 13 && !e.shiftKey) {
                     e.preventDefault();
                     callbackJavisChat(); // 함수 호출
                 }
             });
 
             // 자비스 채팅 이벤트 등록
-            $('#btn-javis-chat').click(callbackJavisChat)
+            /* $('#btn-javis-chat').click(callbackJavisChat) */
 
             // 자비스 채팅 이벤트
             function callbackJavisChat() {
@@ -79,6 +79,7 @@
                             <li class="nav-item message-item">
                                 <p>
                                     <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
+                                    <span style="color: darkgray">Tokens ${res.totalTokens} / ${res.maxTokens}</span>
                                 </p>
                                 <span class="chat-item">${res.message}</span>
                             </li>

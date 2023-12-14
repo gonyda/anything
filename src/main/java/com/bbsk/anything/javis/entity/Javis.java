@@ -9,8 +9,6 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-import static com.bbsk.anything.javis.service.ChatGptApiService.*;
-
 @Entity
 @ToString
 @Getter

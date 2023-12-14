@@ -65,6 +65,7 @@
                                 </th:block>
                                 <th:block th:if="${e.sender == 'assistant'}">
                                     <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
+                                    <span style="color: darkgray" th:text="|Tokens ${e.totalTokens} / ${e.maxTokens}|">Tokens 123 / 13432</span>
                                 </th:block>
                             </p>
                             <span class="chat-item" th:utext="${e.message}">채팅 내용</span>
@@ -74,10 +75,10 @@
                 </ul>
             </div>
 
-            <form class="d-flex mt-3" role="search">
-                <input class="form-control me-2" id="javisInput" type="text">
-                <button class="btn btn-success" type="button" id="btn-javis-chat">Submit</button>
-            </form>
+            <div class="form-floating">
+                <textarea class="form-control" style="height: 80px; width: 98%" id="javisInput"></textarea>
+                <!--<button class="btn btn-success" type="button" id="btn-javis-chat">Submit</button>-->
+            </div>
         </div>
     </div>
 

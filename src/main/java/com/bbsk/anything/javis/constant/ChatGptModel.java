@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum ChatGptModel {
 
-    GPT_3_5_TURBO("gpt-3.5-turbo");
+    GPT_3_5_TURBO("gpt-3.5-turbo", 4096L),
+    GPT_3_5_TURBO_1106("gpt-3.5-turbo-1106", 16385L);
 
-    private String value;
+    private String name;
+    private Long tokens;
 
 }

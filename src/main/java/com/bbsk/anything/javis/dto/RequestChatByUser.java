@@ -14,7 +14,7 @@ public class RequestChatByUser {
     private Message[] messages;
     private LocalDateTime createTime;
     private User user;
-    private final String model = ChatGptModel.GPT_3_5_TURBO.getValue();
+    private final String model = ChatGptModel.GPT_3_5_TURBO_1106.getName();
 
     public void setCreateTime(String createTime) {
         this.createTime = LocalDateTime.parse(createTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

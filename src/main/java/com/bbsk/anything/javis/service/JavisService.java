@@ -1,5 +1,6 @@
 package com.bbsk.anything.javis.service;
 
+import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.javis.dto.RequestChatByUser;
 import com.bbsk.anything.javis.dto.ResponseChatByGpt;
 import com.bbsk.anything.javis.entity.Javis;
@@ -59,11 +60,15 @@ public class JavisService {
         private String sender;
         private LocalDateTime createTime;
         private String message;
+        private Long totalTokens;
+        private Long maxTokens;
 
         public ResponseGptChat toDto(Javis entity) {
             this.sender = entity.getSender();
             this.createTime = entity.getCreateTime();
             this.message = entity.getMessage();
+            this.totalTokens = entity.getTotalTokens();
+            this.maxTokens = ChatGptModel.GPT_3_5_TURBO_1106.getTokens();
 
             return this;
         }
