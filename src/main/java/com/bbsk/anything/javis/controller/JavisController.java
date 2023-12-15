@@ -21,6 +21,6 @@ public class JavisController {
     @PostMapping("/javis")
     public ResponseEntity<ResponseGptChat> chat(@AuthenticationPrincipal User user, @RequestBody RequestChatByUser dto) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(javisService.save(dto.updateUser(user)));
+        return ResponseEntity.status(HttpStatus.OK).body(javisService.callGptApi(dto.updateUser(user)));
     }
 }

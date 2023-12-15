@@ -1,5 +1,6 @@
 package com.bbsk.anything.user.entity;
 
+import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.news.entity.NewsKeyword;
 import com.bbsk.anything.schedule.entity.Schedule;
 import com.bbsk.anything.security.serivce.Sha512CustomPasswordEncoder;
@@ -33,6 +34,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Schedule> scheduleList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Javis> javisList = new ArrayList<>();
 
     @Column(nullable = false)
     private String userPw;

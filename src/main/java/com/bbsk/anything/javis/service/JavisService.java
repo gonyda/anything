@@ -25,7 +25,7 @@ public class JavisService {
     private final ChatGptApiService chatGptApiService;
 
     @Transactional
-    public ResponseGptChat save(RequestChatByUser dto) {
+    public ResponseGptChat callGptApi(RequestChatByUser dto) {
         // 유저 채팅 저장
         javisRepository.save(new Javis().toEntity(dto));
 
