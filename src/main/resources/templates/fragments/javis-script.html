@@ -42,6 +42,7 @@
             // 자비스 채팅 이벤트
             function callbackJavisChat() {
                 var message = $('#javisInput').val();
+
                 if (![[${#authorization.expression('isAuthenticated()')}]]) {
                     alert('로그인 이후에 이용하실 수 있습니다.')
                     return false;
@@ -61,7 +62,8 @@
                 // 현재 채팅 가져오기
                 var messages = getChatList();
 
-                toggleSpinner(true);
+                toggleSpinner(true); // 스피너 실행
+                $("#javisInput").prop("disabled", true); // textarea disabled
                 $.ajax({
                     type : 'post',           // 타입 (get, post, put 등등)
                     url : '/javis',           // 요청할 서버url
@@ -79,14 +81,16 @@
                             <li class="nav-item message-item">
                                 <p>
                                     <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
-                                    <span style="color: darkgray">Tokens ${res.totalTokens} / ${res.maxTokens}</span>
+                                    <span style="color: darkgray">${res.model} Tokens ${res.totalTokens} / ${res.maxTokens}</span>
                                 </p>
                                 <span class="chat-item">${res.message}</span>
                             </li>
                         `;
-                        toggleSpinner(false);
-                        $('#chat-list').append(newChatHtml);
-                        $('#wrap-javis').animate({ scrollTop: $('#wrap-javis')[0].scrollHeight }, "slow");
+                        toggleSpinner(false); // 스피너 종료
+                        $('#chat-list').append(newChatHtml); // 채팅 append
+                        $("#javisInput").prop("disabled", false); // textarea able
+                        $('#javisInput').focus(); // textarea 포커싱
+                        $('#wrap-javis').animate({ scrollTop: $('#wrap-javis')[0].scrollHeight }, "slow"); // 스크롤 이동
                     },
                     error : function(request, status, error) { // 결과 에러 콜백함수
                         console.log(error)
@@ -120,7 +124,7 @@
                             <span class="badge text-bg-light" style="font-size: 20px">User</span>
                             <span style="color: darkgray">${now}</span>
                         </p>
-                        <span class="chat-item">${message}</span>
+                        <span class="chat-item">${message.replace(/\n/g, '<br>')}</span>
                     </li>
                 `;
                 $('#chat-list').append(newChatHtml);

@@ -62,6 +62,7 @@ public class JavisService {
         private String message;
         private Long totalTokens;
         private Long maxTokens;
+        private String model;
 
         public ResponseGptChat toDto(Javis entity) {
             this.sender = entity.getSender();
@@ -69,6 +70,7 @@ public class JavisService {
             this.message = entity.getMessage();
             this.totalTokens = entity.getTotalTokens();
             this.maxTokens = ChatGptModel.GPT_3_5_TURBO_1106.getTokens();
+            this.model = entity.getModel();
 
             return this;
         }
