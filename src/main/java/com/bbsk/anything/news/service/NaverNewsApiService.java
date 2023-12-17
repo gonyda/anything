@@ -45,7 +45,7 @@ public class NaverNewsApiService {
         ByteBuffer buffer = StandardCharsets.UTF_8.encode(keyword);
         String query = StandardCharsets.UTF_8.decode(buffer).toString();
 
-        URI uri = UriComponentsBuilder.fromUriString (NaverAPI.URI.getValue())
+        URI uri = UriComponentsBuilder.fromUriString (NaverAPI.URL.getValue())
                 .path(NaverAPI.PATH.getValue())
                 .queryParam("query", query)
                 .queryParam("sort", "date")

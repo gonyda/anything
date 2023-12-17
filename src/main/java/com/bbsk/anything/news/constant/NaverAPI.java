@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public enum NaverAPI {
     CLIENT_ID("5xURvLyq3MTVDdRIktaF"),
     CLIENT_SECRET("upwYviBtBJ"),
-    URI ("https://openapi.naver.com"),
+    URL("https://openapi.naver.com"),
     PATH ("/v1/search/news.json");
 
     private String value;
