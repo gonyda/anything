@@ -35,9 +35,10 @@ public class JavisService {
         if (StringUtils.contains(dto.getMessages()[dto.getMessages().length - 1].getContent(), "날씨")) {
             ResponseWeatherDto responseWeatherDto = weatherApiService.getWeather(dto.getMessages()[dto.getMessages().length - 1].getContent());
 
-            System.out.println("responseWeatherDto = " + responseWeatherDto.toString());
+            if (responseWeatherDto != null) {
+                // 날씨예보 api 실행
+            }
         }
-
 
         // 유저 채팅 저장
         javisRepository.save(new Javis().toEntity(dto));

@@ -14,6 +14,12 @@ public class ResponseWeatherDto {
 
     private Response response;
 
+    /**
+     * 필요한 데이터만 추출
+     * @param categories
+     * @param baseDate
+     * @return
+     */
     public ResponseWeatherDto filterItemsByCategories(String[] categories, BaseDate baseDate) {
         List<Response.Body.Items.Item> filteredItems = Arrays.stream(response.body.items.item)
                 .filter(item -> Arrays.asList(categories).contains(item.category))
