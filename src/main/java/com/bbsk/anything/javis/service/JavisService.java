@@ -5,9 +5,8 @@ import com.bbsk.anything.javis.dto.RequestChatByUser;
 import com.bbsk.anything.javis.dto.ResponseChatByGpt;
 import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
-import com.bbsk.anything.weather.constant.Region;
+import com.bbsk.anything.weather.dto.ResponseWeatherDto;
 import com.bbsk.anything.weather.service.WeatherApiService;
-import com.bbsk.anything.weather.service.WeatherApiService.ResponseWeatherDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -36,6 +34,7 @@ public class JavisService {
 
         if (StringUtils.contains(dto.getMessages()[dto.getMessages().length - 1].getContent(), "날씨")) {
             ResponseWeatherDto responseWeatherDto = weatherApiService.getWeather(dto.getMessages()[dto.getMessages().length - 1].getContent());
+
             System.out.println("responseWeatherDto = " + responseWeatherDto.toString());
         }
 

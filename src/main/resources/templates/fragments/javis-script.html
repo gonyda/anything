@@ -101,6 +101,10 @@
             // 현재 채팅 가져오기
             function getChatList() {
                 var chatList = [];
+                chatList.push({
+                    role : 'system',
+                    content : '너는 나의 비서야. 현재시간은 ' + new Date().toLocaleString()
+                })
                 $(".message-item").each(function () {
                     chatList.push({
                         role : $(this).find("p").find("span").first().text() == 'User' ?
