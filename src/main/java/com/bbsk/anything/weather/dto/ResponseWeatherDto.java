@@ -1,6 +1,7 @@
 package com.bbsk.anything.weather.dto;
 
 import com.bbsk.anything.weather.constant.BaseDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public class ResponseWeatherDto {
 
     private Response response;
+    @JsonIgnore
+    private String region;
 
     /**
      * 필요한 데이터만 추출
@@ -27,6 +30,12 @@ public class ResponseWeatherDto {
                 .toList();
 
         response.body.items.item = filteredItems.toArray(new Response.Body.Items.Item[0]);
+
+        return this;
+    }
+
+    public ResponseWeatherDto updateRegion(String region) {
+        this.region = region;
 
         return this;
     }

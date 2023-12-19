@@ -43,8 +43,8 @@ public class WeatherApiService {
             try {
                 ResponseWeatherDto dto = ObjectMapperHolder.INSTANCE.get()
                         .readValue(weatherApiConnect(region), ResponseWeatherDto.class);
-
-                return dto.filterItemsByCategories(CATEGORIES_TO_FILTER, fcstDate); // 필요한 카테고리 데이터만 추출
+                dto.filterItemsByCategories(CATEGORIES_TO_FILTER, fcstDate); // 필요한 카테고리 데이터만 추출
+                return dto.updateRegion(region.getCity());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e.getMessage());
             }

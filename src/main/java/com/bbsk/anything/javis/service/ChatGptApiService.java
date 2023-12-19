@@ -73,6 +73,10 @@ public class ChatGptApiService {
             ResponseFunctionCall responseFunctionCall = ObjectMapperHolder.INSTANCE.get()
                     .readValue(functionCallApi(requestFunctionCall).getBody(), ResponseFunctionCall.class);
 
+            System.out.println("requestFunctionCall = " + requestFunctionCall.toString());
+            System.out.println("responseFunctionCall = " + responseFunctionCall.toString());
+            System.out.println("weatherInfo = " + weatherInfo.toString());
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
