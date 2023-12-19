@@ -13,4 +13,10 @@ public class Message {
     public void setContent(String content) {
         this.content = StringUtils.replace(content, "\n", "<br />");
     }
+
+    public Message DtoForFunctionCall(Message message) {
+        this.role = message.getRole();
+        this.content = message.getContent();
+        return this;
+    }
 }

@@ -103,7 +103,7 @@
                 var chatList = [];
                 chatList.push({
                     role : 'system',
-                    content : '너는 나의 비서야. 현재시간은 ' + new Date().toLocaleString()
+                    content : '너는 나의 비서야. 너한테 실시간 시간을 알려줄꺼야. 현재시간은 ' + new Date() + ' 이야.'
                 })
                 $(".message-item").each(function () {
                     chatList.push({

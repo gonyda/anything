@@ -1,6 +1,7 @@
 package com.bbsk.anything.javis.service;
 
 import com.bbsk.anything.javis.constant.ChatGptApi;
+import com.bbsk.anything.javis.dto.FunctionCallDto;
 import com.bbsk.anything.javis.dto.Message;
 import com.bbsk.anything.javis.dto.RequestChatByUser;
 import com.bbsk.anything.javis.dto.ResponseChatByGpt;
@@ -14,14 +15,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.List;
 
 @Service
 public class ChatGptApiService {
 
     /**
+     * chat GPT 일반채팅
      * @param dto
      * @return
      */
@@ -35,6 +35,7 @@ public class ChatGptApiService {
     }
 
     /**
+     * chat GPT 일반채팅 API 호출
      * @param dto
      * @return
      */
@@ -57,6 +58,42 @@ public class ChatGptApiService {
         return new RestTemplate().exchange(request, String.class);
     }
 
+    /**
+     * ChatGPT function call
+     *
+     * @param dto
+     * @return
+     */
+    public String getFunctionCall(FunctionCallDto dto) {
+        try {
+            return ObjectMapperHolder.INSTANCE.get()
+                    .readValue(chatGptApiConnect(dto).getBody(), String.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    /**
+     * ChatGPT function call API 호출
+     * @param dto
+     * @return
+     */
+    private ResponseEntity<String> chatGptApiConnect(FunctionCallDto dto) {
+        URI uri = UriComponentsBuilder.fromUriString (ChatGptApi.URI.getValue())
+                .encode()
+                .build()
+                .toUri();
+
+        RequestEntity<FunctionCallDto> request = RequestEntity
+                .post(uri) // http method (get, post, ...)
+                .header("Authorization", ChatGptApi.AUTHORIZATION.getValue())
+                .body(dto);
+
+        System.out.println("request = " + request.getBody().toString());
+
+        return new RestTemplate().exchange(request, String.class);
+    }
+
     @Getter
     @ToString
     @Builder
@@ -64,6 +101,6 @@ public class ChatGptApiService {
     @AllArgsConstructor
     public static class RequestApiDto {
         private String model;
-        private Message[] messages;
+        private List<Message> messages;
     }
 }

@@ -7,11 +7,13 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @ToString
 public class RequestChatByUser {
-    private Message[] messages;
+    private List<Message> messages;
     private LocalDateTime createTime;
     private User user;
     private final String model = ChatGptModel.GPT_3_5_TURBO_1106.getName();
@@ -22,7 +24,6 @@ public class RequestChatByUser {
 
     public RequestChatByUser updateUser(User user) {
         this.user = user;
-
         return this;
     }
 }

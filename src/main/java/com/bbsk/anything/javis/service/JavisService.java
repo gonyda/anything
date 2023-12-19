@@ -1,10 +1,13 @@
 package com.bbsk.anything.javis.service;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
+import com.bbsk.anything.javis.dto.FunctionCallDto;
+import com.bbsk.anything.javis.dto.Message;
 import com.bbsk.anything.javis.dto.RequestChatByUser;
 import com.bbsk.anything.javis.dto.ResponseChatByGpt;
 import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
+import com.bbsk.anything.weather.dto.RequestFunctionCallDto;
 import com.bbsk.anything.weather.dto.ResponseWeatherDto;
 import com.bbsk.anything.weather.service.WeatherApiService;
 import lombok.Getter;
@@ -19,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.bbsk.anything.javis.dto.FunctionCallDto.*;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -32,11 +37,23 @@ public class JavisService {
     @Transactional
     public ResponseGptChat callGptApi(RequestChatByUser dto) {
 
-        if (StringUtils.contains(dto.getMessages()[dto.getMessages().length - 1].getContent(), "날씨")) {
-            ResponseWeatherDto responseWeatherDto = weatherApiService.getWeather(dto.getMessages()[dto.getMessages().length - 1].getContent());
+        if (StringUtils.contains(dto.getMessages().get(dto.getMessages().size() -1).getContent(), "날씨")) {
+            ResponseWeatherDto weatherInfo = weatherApiService.getWeather(dto.getMessages().get(dto.getMessages().size() - 1).getContent());
 
-            if (responseWeatherDto != null) {
+            if (weatherInfo != null) {
                 // 날씨예보 api 실행
+                List<RequestFunctionCallDto> functions = new ArrayList<>();
+                functions.add(new RequestFunctionCallDto());
+
+                List<Message> messages = new ArrayList<>();
+                messages.add(dto.getMessages().get(dto.getMessages().size() -1));
+
+                String response = chatGptApiService.getFunctionCall(FunctionCallDto.builder()
+                        .functions(functions) // function call 정의
+                        .messages(messages) // function call 메세지
+                        .build());
+
+                System.out.println("response = " + response);
             }
         }
 

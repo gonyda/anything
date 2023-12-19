@@ -1,5 +1,6 @@
 package com.bbsk.anything.weather.service;
 
+import com.bbsk.anything.javis.dto.Message;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.bbsk.anything.weather.constant.BaseDate;
 import com.bbsk.anything.weather.constant.Region;
@@ -14,6 +15,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,13 +41,13 @@ public class WeatherApiService {
 
         if (matcher.find()) {
             Region region = Region.valueOf(matcher.group(2)); // 요청 지역
-            BaseDate baseDate = BaseDate.valueOf(matcher.group(1)); // 요청일
+            BaseDate fcstDate = BaseDate.valueOf(matcher.group(1)); // 요청일
 
             try {
                 ResponseWeatherDto dto = ObjectMapperHolder.INSTANCE.get()
                         .readValue(weatherApiConnect(region), ResponseWeatherDto.class);
 
-                return dto.filterItemsByCategories(CATEGORIES_TO_FILTER, baseDate); // 필요한 카테고리 데이터만 추출
+                return dto.filterItemsByCategories(CATEGORIES_TO_FILTER, fcstDate); // 필요한 카테고리 데이터만 추출
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e.getMessage());
             }

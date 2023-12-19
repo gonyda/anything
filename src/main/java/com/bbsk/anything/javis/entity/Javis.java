@@ -39,9 +39,9 @@ public class Javis {
     public Javis toEntity(RequestChatByUser dto) {
         this.user = dto.getUser();
         this.createTime = dto.getCreateTime();
-        this.sender = dto.getMessages()[dto.getMessages().length -1].getRole();
+        this.sender = dto.getMessages().get(dto.getMessages().size() -1).getRole();
         this.model = dto.getModel();
-        this.message = dto.getMessages()[dto.getMessages().length -1].getContent();
+        this.message = dto.getMessages().get(dto.getMessages().size() -1).getContent();
 
         return this;
     }

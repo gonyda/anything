@@ -20,10 +20,10 @@ public class ResponseWeatherDto {
      * @param baseDate
      * @return
      */
-    public ResponseWeatherDto filterItemsByCategories(String[] categories, BaseDate baseDate) {
+    public ResponseWeatherDto filterItemsByCategories(String[] categories, BaseDate fcstDate) {
         List<Response.Body.Items.Item> filteredItems = Arrays.stream(response.body.items.item)
                 .filter(item -> Arrays.asList(categories).contains(item.category))
-                .filter(item -> item.getFcstDate().equals(baseDate.getLocalDateTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"))))
+                .filter(item -> item.getFcstDate().equals(fcstDate.getLocalDateTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"))))
                 .toList();
 
         response.body.items.item = filteredItems.toArray(new Response.Body.Items.Item[0]);
