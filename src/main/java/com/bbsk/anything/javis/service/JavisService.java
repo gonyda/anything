@@ -31,9 +31,12 @@ public class JavisService {
     public ResponseGptChat callGptApi(RequestChatByUser dto) {
 
         if (StringUtils.contains(dto.getMessages().get(dto.getMessages().size() -1).getContent(), "날씨")) {
-
             ResponseWeatherDto weatherInfo = weatherApiService.getWeather(dto.getMessages().get(dto.getMessages().size() - 1).getContent());
             if (weatherInfo != null) {
+                // 유저 채팅 저장
+                javisRepository.save(new Javis().toEntity(dto));
+
+                // function call 실행
                 List<Function> functions = new ArrayList<>();
                 functions.add(new Function());
 
@@ -45,7 +48,11 @@ public class JavisService {
                         .functions(functions)
                         .build();
 
-                chatGptApiService.getWeather(requestFunctionCall, weatherInfo);
+                ResponseChatByGpt weatherChat = chatGptApiService.getWeatherChat(requestFunctionCall, weatherInfo);
+
+                // GPT 채팅 저장
+                Javis gptChat = javisRepository.save(new Javis().toEntity(weatherChat, dto.getUser()));
+                return new ResponseGptChat().toDto(gptChat);
             }
         }
 

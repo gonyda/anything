@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,8 @@ public class ResponseWeatherDto {
         List<Response.Body.Items.Item> filteredItems = Arrays.stream(response.body.items.item)
                 .filter(item -> Arrays.asList(categories).contains(item.category))
                 .filter(item -> item.getFcstDate().equals(fcstDate.getLocalDateTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"))))
+                .filter(item -> Integer.parseInt(item.getFcstTime()) >=
+                        Integer.parseInt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmm"))))
                 .toList();
 
         response.body.items.item = filteredItems.toArray(new Response.Body.Items.Item[0]);
