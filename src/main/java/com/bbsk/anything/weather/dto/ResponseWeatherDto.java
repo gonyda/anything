@@ -17,7 +17,7 @@ public class ResponseWeatherDto {
     /**
      * 필요한 데이터만 추출
      * @param categories
-     * @param baseDate
+     * @param fcstDate
      * @return
      */
     public ResponseWeatherDto filterItemsByCategories(String[] categories, BaseDate fcstDate) {

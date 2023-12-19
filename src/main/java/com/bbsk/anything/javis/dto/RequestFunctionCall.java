@@ -1,7 +1,6 @@
 package com.bbsk.anything.javis.dto;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
-import com.bbsk.anything.weather.dto.RequestFunctionCallDto;
 import lombok.*;
 
 import java.util.List;
@@ -11,10 +10,10 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Builder
-public class FunctionCallDto {
+public class RequestFunctionCall {
 
     private final String model = ChatGptModel.GPT_3_5_TURBO_1106.getName();
     private List<Message> messages;
-    private List<RequestFunctionCallDto> functions;
+    private List<Function> functions;
 
 }

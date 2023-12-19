@@ -1,11 +1,10 @@
 package com.bbsk.anything.javis.service;
 
 import com.bbsk.anything.javis.constant.ChatGptApi;
-import com.bbsk.anything.javis.dto.FunctionCallDto;
-import com.bbsk.anything.javis.dto.Message;
-import com.bbsk.anything.javis.dto.RequestChatByUser;
-import com.bbsk.anything.javis.dto.ResponseChatByGpt;
+import com.bbsk.anything.javis.dto.*;
 import com.bbsk.anything.utils.ObjectMapperHolder;
+import com.bbsk.anything.weather.dto.ResponseWeatherDto;
+import com.bbsk.anything.weather.service.WeatherApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
 import org.springframework.http.RequestEntity;
@@ -15,10 +14,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ChatGptApiService {
+
+    private final WeatherApiService weatherApiService;
 
     /**
      * chat GPT 일반채팅
@@ -62,15 +65,19 @@ public class ChatGptApiService {
      * ChatGPT function call
      *
      * @param dto
+     * @param weatherInfo
      * @return
      */
-    public String getFunctionCall(FunctionCallDto dto) {
+    public ResponseFunctionCall getWeather(RequestFunctionCall requestFunctionCall, ResponseWeatherDto weatherInfo) {
         try {
-            return ObjectMapperHolder.INSTANCE.get()
-                    .readValue(chatGptApiConnect(dto).getBody(), String.class);
+            ResponseFunctionCall responseFunctionCall = ObjectMapperHolder.INSTANCE.get()
+                    .readValue(functionCallApi(requestFunctionCall).getBody(), ResponseFunctionCall.class);
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
+
+        return null;
     }
 
     /**
@@ -78,18 +85,16 @@ public class ChatGptApiService {
      * @param dto
      * @return
      */
-    private ResponseEntity<String> chatGptApiConnect(FunctionCallDto dto) {
+    private ResponseEntity<String> functionCallApi(RequestFunctionCall dto) {
         URI uri = UriComponentsBuilder.fromUriString (ChatGptApi.URI.getValue())
                 .encode()
                 .build()
                 .toUri();
 
-        RequestEntity<FunctionCallDto> request = RequestEntity
+        RequestEntity<RequestFunctionCall> request = RequestEntity
                 .post(uri) // http method (get, post, ...)
                 .header("Authorization", ChatGptApi.AUTHORIZATION.getValue())
                 .body(dto);
-
-        System.out.println("request = " + request.getBody().toString());
 
         return new RestTemplate().exchange(request, String.class);
     }

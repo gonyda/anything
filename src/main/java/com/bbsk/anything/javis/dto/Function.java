@@ -1,18 +1,17 @@
-package com.bbsk.anything.weather.dto;
+package com.bbsk.anything.javis.dto;
 
-import com.bbsk.anything.weather.constant.Region;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
-public class RequestFunctionCallDto {
+public class Function {
 
     private String name;
     private String description;
     private Parameters parameters;
 
-    public RequestFunctionCallDto() {
+    public Function() {
         this.name = "get_current_weather";
         this.description = "주어진 지역의 날씨, 강수량, 하늘상태를 알려줍니다.";
         this.parameters = new Parameters();
