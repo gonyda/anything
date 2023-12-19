@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -64,7 +65,7 @@ public class ChatGptApiService {
     /**
      * ChatGPT function call
      *
-     * @param dto
+     * @param requestFunctionCall
      * @param weatherInfo
      * @return
      */
@@ -73,9 +74,25 @@ public class ChatGptApiService {
             ResponseFunctionCall responseFunctionCall = ObjectMapperHolder.INSTANCE.get()
                     .readValue(functionCallApi(requestFunctionCall).getBody(), ResponseFunctionCall.class);
 
-            System.out.println("requestFunctionCall = " + requestFunctionCall.toString());
-            System.out.println("responseFunctionCall = " + responseFunctionCall.toString());
-            System.out.println("weatherInfo = " + weatherInfo.toString());
+            requestFunctionCall.getMessages().add(responseFunctionCall.getChoices()[0].getMessage());
+
+            String format = "{\"location\":\"%s\",\"category\":\"%s\",\"fcstDate\":\"%s\",\"fcstTime\":\"%s\",\"fcstValue\":\"%s\"}";
+            StringBuilder content = new StringBuilder();
+            Arrays.stream(weatherInfo.getResponse().getBody().getItems().getItem()).forEach(e -> {
+                content.append(
+                    String.format(format, weatherInfo.getRegion(), e.getCategory(), e.getFcstDate(), e.getFcstTime(), e.getFcstValue())
+                );
+            });
+
+            requestFunctionCall.getMessages().add(RequestWeatherInfo.builder()
+                            .role("function")
+                            .name(responseFunctionCall.getChoices()[0].getMessage().getFunction_call().getName())
+                            .content(content.toString())
+                            .build());
+
+            ResponseEntity<String> response = functionCallApi(requestFunctionCall);
+
+            System.out.println("response = " + response);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());

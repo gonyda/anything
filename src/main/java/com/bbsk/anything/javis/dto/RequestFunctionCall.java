@@ -13,7 +13,7 @@ import java.util.List;
 public class RequestFunctionCall {
 
     private final String model = ChatGptModel.GPT_3_5_TURBO_1106.getName();
-    private List<Message> messages;
+    private List<Object> messages;
     private List<Function> functions;
 
 }

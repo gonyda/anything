@@ -13,7 +13,7 @@ public class Function {
 
     public Function() {
         this.name = "get_current_weather";
-        this.description = "주어진 지역의 날씨, 강수량, 하늘상태를 알려줍니다.";
+        this.description = "주어진 지역의 날씨, 강수량, 하늘상태를 알려줍니다. 최저기온 및 최고기온을 알려주어야 합니다. 또한 예보시간대별로도 알려주어야 합니다.";
         this.parameters = new Parameters();
     }
 
@@ -74,7 +74,7 @@ public class Function {
                     sb.append("TMP: 시간별 기온 ");
                     sb.append("POP: 시간별 강수량 ");
                     sb.append("SKY: 하늘상태 ");
-                    sb.append("SKY의 값은 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4) 입니다.");
+                    sb.append("SKY의 값은 맑음(1), 구름많음(3), 흐림(4) 입니다.");
                     this.description = sb.toString();
                     return this;
                 }

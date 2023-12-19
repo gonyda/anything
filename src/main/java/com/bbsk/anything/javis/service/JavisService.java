@@ -37,7 +37,7 @@ public class JavisService {
                 List<Function> functions = new ArrayList<>();
                 functions.add(new Function());
 
-                List<Message> messages = new ArrayList<>();
+                List<Object> messages = new ArrayList<>();
                 messages.add(dto.getMessages().get(dto.getMessages().size() -1));
 
                 RequestFunctionCall requestFunctionCall = RequestFunctionCall.builder()
