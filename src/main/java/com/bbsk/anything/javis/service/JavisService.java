@@ -4,8 +4,11 @@ import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.javis.dto.*;
 import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
+import com.bbsk.anything.weather.constant.BaseDate;
+import com.bbsk.anything.weather.constant.Region;
 import com.bbsk.anything.weather.dto.ResponseWeatherDto;
 import com.bbsk.anything.weather.service.WeatherApiService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -14,8 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.*;
 
 
 @Service
@@ -29,38 +35,40 @@ public class JavisService {
 
     @Transactional
     public ResponseGptChat callGptApi(RequestChatByUser dto) {
-
-        if (StringUtils.contains(dto.getMessages().get(dto.getMessages().size() -1).getContent(), "날씨")) {
-            ResponseWeatherDto weatherInfo = weatherApiService.getWeather(dto.getMessages().get(dto.getMessages().size() - 1).getContent());
-            if (weatherInfo != null) {
-                // 유저 채팅 저장
-                javisRepository.save(new Javis().toEntity(dto));
-
-                // function call 실행
-                List<Function> functions = new ArrayList<>();
-                functions.add(new Function());
-
-                List<Object> messages = new ArrayList<>();
-                messages.add(dto.getMessages().get(dto.getMessages().size() -1));
-
-                RequestFunctionCall requestFunctionCall = RequestFunctionCall.builder()
-                        .messages(messages)
-                        .functions(functions)
-                        .build();
-
-                ResponseChatByGpt weatherChat = chatGptApiService.getWeatherChat(requestFunctionCall, weatherInfo);
-
-                // GPT 채팅 저장
-                Javis gptChat = javisRepository.save(new Javis().toEntity(weatherChat, dto.getUser()));
-                return new ResponseGptChat().toDto(gptChat);
+        // 날씨요청 채팅 여부 체크
+        Matcher matcher = isChatForWeather(dto.getMessages().get(dto.getMessages().size() - 1).getContent());
+        if (matcher != null) {
+            ResponseWeatherDto weatherInfo;
+            ResponseChatByGpt weatherChat;
+            try {
+                // 날씨 정보 API 호출
+                weatherInfo = weatherApiService.getWeather(Region.valueOf(matcher.group(2)), // 날씨요청 지역
+                                                           BaseDate.valueOf(matcher.group(1))); // 날씨요청 일자
+                // GPT 날씨 채팅 가져오기
+                weatherChat = chatGptApiService.getWeatherChat(dto, weatherInfo);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e.getMessage());
             }
+
+            // 유저 채팅 저장
+            javisRepository.save(new Javis().toEntity(dto));
+
+            // GPT 채팅 저장
+            Javis gptChat = javisRepository.save(new Javis().toEntity(weatherChat, dto.getUser()));
+
+            return new ResponseGptChat().toDto(gptChat);
+        }
+
+        // API Connect
+        ResponseChatByGpt chat;
+        try {
+            chat = chatGptApiService.getChat(dto);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
 
         // 유저 채팅 저장
         javisRepository.save(new Javis().toEntity(dto));
-
-        // API Connect
-        ResponseChatByGpt chat = chatGptApiService.getChat(dto);
 
         // GPT 채팅 저장
         Javis gptChat = javisRepository.save(new Javis().toEntity(chat, dto.getUser()));
@@ -69,19 +77,61 @@ public class JavisService {
     }
 
     /**
-     * 해당 유저의 채팅 내역 가져져오기
+     * 해당 유저의 채팅 내역 가져오기
      *
      * @param userId
      * @return
      */
     public List<ResponseGptChat> findAllByUser(String userId) {
-        List<ResponseGptChat> list = new ArrayList<>();
+        return javisRepository.findAllByUserUserIdOrderByChatIdAsc(userId).stream()
+                .map(e -> new ResponseGptChat().toDto(e))
+                .collect(toList());
+    }
 
-        javisRepository.findAllByUserUserIdOrderByChatIdAsc(userId).forEach(e -> {
-            list.add(new ResponseGptChat().toDto(e));
-        });
+    /**
+     * 날씨요청 채팅 여부
+     * @param content
+     * @return
+     */
+    private Matcher isChatForWeather(String content) {
+        Matcher matcher = Pattern.compile(buildPatternString(BaseDate.values()) + ".*" + buildPatternString(Region.values()))
+                .matcher(content);
 
-        return list;
+        return StringUtils.contains(content, "날씨") && matcher.find() ?
+                matcher :
+                null;
+    }
+
+    /**
+     * 정규식 패턴 생성
+     * @param baseDates
+     * @return
+     */
+    private String buildPatternString(BaseDate[] baseDates) {
+        StringBuilder patternBuilder = new StringBuilder("(");
+        for (int i = 0; i < baseDates.length; i++) {
+            patternBuilder.append(baseDates[i].getDay());
+            if (i < baseDates.length - 1) {
+                patternBuilder.append("|");
+            }
+        }
+        return patternBuilder.append(")").toString();
+    }
+
+    /**
+     * 정규식 패턴 생성
+     * @param regions
+     * @return
+     */
+    private String buildPatternString(Region[] regions) {
+        StringBuilder patternBuilder = new StringBuilder("(");
+        for (int i = 0; i < regions.length; i++) {
+            patternBuilder.append(regions[i].getCity());
+            if (i < regions.length - 1) {
+                patternBuilder.append("|");
+            }
+        }
+        return patternBuilder.append(")").toString();
     }
 
     @Getter

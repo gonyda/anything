@@ -1,17 +1,17 @@
-package com.bbsk.anything.javis.dto;
+package com.bbsk.anything.functioncall.dto.weather;
 
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
-public class Function {
+public class Functions {
 
     private String name;
     private String description;
     private Parameters parameters;
 
-    public Function() {
+    public Functions() {
         this.name = "get_current_weather";
         this.description = "주어진 지역의 날씨, 강수량, 하늘상태를 알려줍니다. 최저기온 및 최고기온을 알려주어야 합니다. 또한 예보시간대별로도 알려주어야 합니다.";
         this.parameters = new Parameters();

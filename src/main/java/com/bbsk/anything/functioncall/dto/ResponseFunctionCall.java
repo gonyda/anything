@@ -1,4 +1,4 @@
-package com.bbsk.anything.javis.dto;
+package com.bbsk.anything.functioncall.dto;
 
 import lombok.Getter;
 import lombok.ToString;

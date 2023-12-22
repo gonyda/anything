@@ -1,6 +1,8 @@
 package com.bbsk.anything.weather.service;
 
-import com.bbsk.anything.javis.dto.Message;
+import com.bbsk.anything.functioncall.dto.RequestFunctionCall;
+import com.bbsk.anything.functioncall.dto.ResponseFunctionCall;
+import com.bbsk.anything.functioncall.dto.weather.RequestWeatherInfo;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.bbsk.anything.weather.constant.BaseDate;
 import com.bbsk.anything.weather.constant.Region;
@@ -15,8 +17,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 @Service
 public class WeatherApiService {
@@ -29,28 +30,38 @@ public class WeatherApiService {
     private final static String[] CATEGORIES_TO_FILTER = {"TMP", "POP", "SKY"};
     private final static String[] TIMES = {"0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300"};
 
-    public ResponseWeatherDto getWeather(String content) {
-        // 정규표현식을 동적으로 생성
-        String patternFormat = buildPatternString(BaseDate.values()) + ".*" + buildPatternString(Region.values());
+    public ResponseWeatherDto getWeather(Region region, BaseDate fcstDate) throws JsonProcessingException {
+            ResponseWeatherDto dto = ObjectMapperHolder.INSTANCE.get()
+                    .readValue(weatherApiConnect(region), ResponseWeatherDto.class);
 
-        // 패턴 매칭
-        Matcher matcher = Pattern.compile(patternFormat).matcher(content);
+            dto.filterItemsByCategories(CATEGORIES_TO_FILTER, fcstDate); // 필요한 데이터만 추출
+            return dto.updateRegion(region.getCity()); // 지역 세팅
+    }
 
-        if (matcher.find()) {
-            Region region = Region.valueOf(matcher.group(2)); // 요청 지역
-            BaseDate fcstDate = BaseDate.valueOf(matcher.group(1)); // 요청일
+    /**
+     * weather function call
+     * 필요한 데이터 세팅
+     * @param requestFunctionCall
+     * @param responseFunctionCall
+     * @param weatherInfo
+     */
+    public void setRequestDataForFunctionCall(RequestFunctionCall requestFunctionCall, ResponseFunctionCall responseFunctionCall, ResponseWeatherDto weatherInfo) {
+        // function call 함수 정의
+        requestFunctionCall.getMessages().add(responseFunctionCall.getChoices()[0].getMessage());
 
-            try {
-                ResponseWeatherDto dto = ObjectMapperHolder.INSTANCE.get()
-                        .readValue(weatherApiConnect(region), ResponseWeatherDto.class);
-                dto.filterItemsByCategories(CATEGORIES_TO_FILTER, fcstDate); // 필요한 카테고리 데이터만 추출
-                return dto.updateRegion(region.getCity());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-
-        return null;
+        // function call 함수에 사용될 데이터 정의
+        String format = "{\"location\":\"%s\",\"category\":\"%s\",\"fcstDate\":\"%s\",\"fcstTime\":\"%s\",\"fcstValue\":\"%s\"}";
+        StringBuilder content = new StringBuilder();
+        Arrays.stream(weatherInfo.getResponse().getBody().getItems().getItem()).forEach(e -> {
+            content.append(
+                    String.format(format, weatherInfo.getRegion(), e.getCategory(), e.getFcstDate(), e.getFcstTime(), e.getFcstValue())
+            );
+        });
+        requestFunctionCall.getMessages().add(RequestWeatherInfo.builder()
+                .role("function")
+                .name(responseFunctionCall.getChoices()[0].getMessage().getFunction_call().getName())
+                .content(content.toString())
+                .build());
     }
 
     /**
@@ -75,7 +86,7 @@ public class WeatherApiService {
             return new RestTemplate().exchange(RequestEntity.get(uri.toURI()).build(), String.class)
                                      .getBody();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
