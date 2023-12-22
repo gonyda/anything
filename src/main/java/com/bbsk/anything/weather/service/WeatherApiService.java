@@ -105,26 +105,4 @@ public class WeatherApiService {
         }
         return TIMES[targetIndex];
     }
-
-    private String buildPatternString(BaseDate[] baseDates) {
-        StringBuilder patternBuilder = new StringBuilder("(");
-        for (int i = 0; i < baseDates.length; i++) {
-            patternBuilder.append(baseDates[i].getDay());
-            if (i < baseDates.length - 1) {
-                patternBuilder.append("|");
-            }
-        }
-        return patternBuilder.append(")").toString();
-    }
-
-    private String buildPatternString(Region[] regions) {
-        StringBuilder patternBuilder = new StringBuilder("(");
-        for (int i = 0; i < regions.length; i++) {
-            patternBuilder.append(regions[i].getCity());
-            if (i < regions.length - 1) {
-                patternBuilder.append("|");
-            }
-        }
-        return patternBuilder.append(")").toString();
-    }
 }
