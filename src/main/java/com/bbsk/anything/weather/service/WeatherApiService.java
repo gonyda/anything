@@ -35,7 +35,8 @@ public class WeatherApiService {
                     .readValue(weatherApiConnect(region), ResponseWeatherDto.class);
 
             dto.filterItemsByCategories(CATEGORIES_TO_FILTER, fcstDate); // 필요한 데이터만 추출
-            return dto.updateRegion(region.getCity()); // 지역 세팅
+            dto.updateRegion(region.getCity()); // 지역 세팅
+            return dto;
     }
 
     /**

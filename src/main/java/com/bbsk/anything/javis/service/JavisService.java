@@ -41,6 +41,7 @@ public class JavisService {
             ResponseWeatherDto weatherInfo;
             ResponseChatByGpt weatherChat;
             try {
+                /* TODO 날씨정보 캐시 처리 */
                 // 날씨 정보 API 호출
                 weatherInfo = weatherApiService.getWeather(Region.valueOf(matcher.group(2)), // 날씨요청 지역
                                                            BaseDate.valueOf(matcher.group(1))); // 날씨요청 일자

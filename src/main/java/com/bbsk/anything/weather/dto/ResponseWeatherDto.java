@@ -22,9 +22,8 @@ public class ResponseWeatherDto {
      * 필요한 데이터만 추출
      * @param categories
      * @param fcstDate
-     * @return
      */
-    public ResponseWeatherDto filterItemsByCategories(String[] categories, BaseDate fcstDate) {
+    public void filterItemsByCategories(String[] categories, BaseDate fcstDate) {
         List<Response.Body.Items.Item> filteredItems = Arrays.stream(response.body.items.item)
                 .filter(item -> Arrays.asList(categories).contains(item.category))
                 .filter(item -> item.getFcstDate().equals(fcstDate.getLocalDateTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"))))
@@ -34,13 +33,11 @@ public class ResponseWeatherDto {
 
         response.body.items.item = filteredItems.toArray(new Response.Body.Items.Item[0]);
 
-        return this;
     }
 
-    public ResponseWeatherDto updateRegion(String region) {
+    public void updateRegion(String region) {
         this.region = region;
 
-        return this;
     }
 
     @Getter
