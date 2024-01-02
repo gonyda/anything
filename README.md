@@ -1,7 +1,7 @@
 # 개인비서 Anything
 
 <strong>프로젝트 소개 바로가기</strong><br/>
-<a href="https://www.notion.so/Anything-fbb377ef0bbb4d5f8c91add43725b1dc"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=gonyda"></a>
+<a href="https://www.notion.so/Anything-fbb377ef0bbb4d5f8c91add43725b1dc"><img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"></a>
 
 <strong>사용기술</strong><br/>
 <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
