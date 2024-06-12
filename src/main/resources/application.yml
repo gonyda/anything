@@ -1,6 +1,6 @@
 # Server 설정
 server:
-  port: 8080
+  port: 1111
   servlet:
     encoding:
       charset: UTF-8
