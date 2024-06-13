@@ -3,9 +3,7 @@ package com.bbsk.anything.javis.service;
 import com.bbsk.anything.javis.constant.ChatGptApi;
 import com.bbsk.anything.javis.dto.*;
 import com.bbsk.anything.functioncall.dto.RequestFunctionCall;
-import com.bbsk.anything.functioncall.dto.weather.RequestWeatherInfo;
 import com.bbsk.anything.functioncall.dto.ResponseFunctionCall;
-import com.bbsk.anything.functioncall.dto.weather.Functions;
 import com.bbsk.anything.functioncall.service.FunctionCallService;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.bbsk.anything.weather.dto.ResponseWeatherDto;
@@ -19,8 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -36,7 +32,7 @@ public class ChatGptApiService {
      * @param dto
      * @return
      */
-    public ResponseChatByGpt getChat(RequestChatByUser dto) throws JsonProcessingException {
+    public ResponseChatByGpt getGeneralChat(RequestChatByUser dto) throws JsonProcessingException {
         RequestEntity<RequestApiDto> request = RequestEntity
                 .post(getUri()) // http method (get, post, ...)
                 .header("Authorization", ChatGptApi.AUTHORIZATION.getValue())

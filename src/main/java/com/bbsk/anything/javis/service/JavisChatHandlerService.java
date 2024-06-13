@@ -31,7 +31,7 @@ public class JavisChatHandlerService {
             /* TODO 날씨정보 캐시 처리 */
             // 날씨 정보 API 호출
             ResponseWeatherDto weatherInfo = weatherApiService.getWeather(Region.valueOf(matcher.group(2)), // 날씨요청 지역
-                    BaseDate.valueOf(matcher.group(1))); // 날씨요청 일자
+                                                                            BaseDate.valueOf(matcher.group(1))); // 날씨요청 일자
             // GPT 날씨 채팅 가져오기
             ResponseChatByGpt weatherChat = chatGptApiService.getWeatherChat(dto, weatherInfo);
             // 유저 채팅 저장
@@ -47,7 +47,7 @@ public class JavisChatHandlerService {
 
     public ResponseGptChat handleGeneralChat(RequestChatByUser dto) {
         try {
-            ResponseChatByGpt chat = chatGptApiService.getChat(dto);
+            ResponseChatByGpt chat = chatGptApiService.getGeneralChat(dto);
             // 유저 채팅 저장
             javisRepository.save(new Javis().toEntity(dto));
             // GPT 채팅 저장
