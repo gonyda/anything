@@ -1,8 +1,7 @@
 package com.bbsk.anything;
 
-import com.bbsk.anything.javis.entity.Javis;
+import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.javis.service.JavisService;
-import com.bbsk.anything.javis.service.JavisService.ResponseGptChat;
 import com.bbsk.anything.news.service.NewsService;
 import com.bbsk.anything.news.service.NewsService.ResponseSearchNewsDto;
 import com.bbsk.anything.schedule.service.ScheduleService;
@@ -28,6 +27,7 @@ public class HomeController {
     private final NewsService newsService;
     private final ScheduleService scheduleService;
     private final JavisService javisService;
+    private final ExchangeRateService exchangeRateService;
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal User user, Model model) {
@@ -39,6 +39,8 @@ public class HomeController {
             getSchedule(user, model);
             // 자비스 채팅 가져오기
             getChat(user, model);
+            // 한율 조회
+            getExchangeRate(model);
         }
 
         return "home/home";
@@ -77,5 +79,9 @@ public class HomeController {
         ResponseSearchNewsDto dto = newsService.searchNews(null, user.getUserId());
         model.addAttribute("keyword", dto.getKeyword());
         model.addAttribute("news", dto.getNews());
+    }
+
+    private void getExchangeRate(Model model) {
+        model.addAttribute("exchangeRate", exchangeRateService.getExchangeRate());
     }
 }
