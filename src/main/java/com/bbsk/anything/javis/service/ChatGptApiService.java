@@ -42,9 +42,8 @@ public class ChatGptApiService {
                 .header("Authorization", ChatGptApi.AUTHORIZATION.getValue())
                 .body(getRequestApiDto(dto));
 
-        return ObjectMapperHolder.INSTANCE.get()
-                .readValue(new RestTemplate().exchange(request, String.class).getBody(),
-                        ResponseChatByGpt.class);
+        return ObjectMapperHolder.INSTANCE.get().readValue(new RestTemplate().exchange(request, String.class).getBody()
+                                                            , ResponseChatByGpt.class);
     }
 
     /**

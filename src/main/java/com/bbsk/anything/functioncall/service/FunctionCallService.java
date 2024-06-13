@@ -41,8 +41,8 @@ public class FunctionCallService {
      * @throws JsonProcessingException
      */
     public ResponseChatByGpt getResponseFunctionCallChat(RequestFunctionCall requestFunctionCall) throws JsonProcessingException {
-        return ObjectMapperHolder.INSTANCE.get()
-                .readValue(functionCallApi(requestFunctionCall).getBody(), ResponseChatByGpt.class);
+        return ObjectMapperHolder.INSTANCE.get().readValue(functionCallApi(requestFunctionCall).getBody()
+                                                            , ResponseChatByGpt.class);
     }
 
     /**

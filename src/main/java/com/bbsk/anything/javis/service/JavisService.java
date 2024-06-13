@@ -6,9 +6,6 @@ import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
 import com.bbsk.anything.weather.constant.BaseDate;
 import com.bbsk.anything.weather.constant.Region;
-import com.bbsk.anything.weather.dto.ResponseWeatherDto;
-import com.bbsk.anything.weather.service.WeatherApiService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -30,55 +27,24 @@ import static java.util.stream.Collectors.*;
 public class JavisService {
 
     private final JavisRepository javisRepository;
-    private final ChatGptApiService chatGptApiService;
-    private final WeatherApiService weatherApiService;
+    private final JavisChatHandlerService javisChatHandlerService;
 
+    /*
+    * 채팅 요청
+    * */
     @Transactional
     public ResponseGptChat callGptApi(RequestChatByUser dto) {
-        // 날씨요청 채팅 여부 체크
-        Matcher matcher = isChatForWeather(dto.getMessages().get(dto.getMessages().size() - 1).getContent());
-        if (matcher != null) {
-            ResponseWeatherDto weatherInfo;
-            ResponseChatByGpt weatherChat;
-            try {
-                /* TODO 날씨정보 캐시 처리 */
-                // 날씨 정보 API 호출
-                weatherInfo = weatherApiService.getWeather(Region.valueOf(matcher.group(2)), // 날씨요청 지역
-                                                           BaseDate.valueOf(matcher.group(1))); // 날씨요청 일자
-                // GPT 날씨 채팅 가져오기
-                weatherChat = chatGptApiService.getWeatherChat(dto, weatherInfo);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e.getMessage());
-            }
+        // 날씨 요청 채팅 여부 체크
+        String lastMessageContent = dto.getMessages().get(dto.getMessages().size() - 1).getContent();
+        Matcher matcher = isChatForWeather(lastMessageContent);
 
-            // 유저 채팅 저장
-            javisRepository.save(new Javis().toEntity(dto));
-
-            // GPT 채팅 저장
-            Javis gptChat = javisRepository.save(new Javis().toEntity(weatherChat, dto.getUser()));
-
-            return new ResponseGptChat().toDto(gptChat);
-        }
-
-        // API Connect
-        ResponseChatByGpt chat;
-        try {
-            chat = chatGptApiService.getChat(dto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // 유저 채팅 저장
-        javisRepository.save(new Javis().toEntity(dto));
-
-        // GPT 채팅 저장
-        Javis gptChat = javisRepository.save(new Javis().toEntity(chat, dto.getUser()));
-
-        return new ResponseGptChat().toDto(gptChat);
+        return matcher != null ?
+                javisChatHandlerService.handleWeatherChat(dto, matcher) :
+                javisChatHandlerService.handleGeneralChat(dto);
     }
 
     /**
-     * 해당 유저의 채팅 내역 가져오기
+     * 채팅 조회
      *
      * @param userId
      * @return
