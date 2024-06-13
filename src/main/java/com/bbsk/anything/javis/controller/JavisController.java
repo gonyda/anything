@@ -23,4 +23,6 @@ public class JavisController {
 
         return ResponseEntity.status(HttpStatus.OK).body(javisService.callGptApi(dto.updateUser(user)));
     }
+
+    // TODO 새 채팅방, 토큰 초기화
 }

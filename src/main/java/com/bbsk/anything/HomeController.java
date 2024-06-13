@@ -34,14 +34,11 @@ public class HomeController {
 
         if (user != null) {
             // 뉴스 가져오기
-            ResponseSearchNewsDto dto = newsService.searchNews(null, user.getUserId());
-            model.addAttribute("keyword", dto.getKeyword());
-            model.addAttribute("news", dto.getNews());
+            getNews(user, model);
             // 일정 가져오기
-            List<ResponseScheduleDto> list = scheduleService.findAllByUserId(user.getUserId());
-            model.addAttribute("scheduleList", list.isEmpty() ? null : list);
+            getSchedule(user, model);
             // 자비스 채팅 가져오기
-            model.addAttribute("chat", javisService.findAllByUser(user.getUserId()));
+            getChat(user, model);
         }
 
         return "home/home";
@@ -65,5 +62,20 @@ public class HomeController {
         userService.save(user);
 
         return "redirect:/login";
+    }
+
+    private void getChat(User user, Model model) {
+        model.addAttribute("chat", javisService.findAllByUser(user.getUserId()));
+    }
+
+    private void getSchedule(User user, Model model) {
+        List<ResponseScheduleDto> list = scheduleService.findAllByUserId(user.getUserId());
+        model.addAttribute("scheduleList", list.isEmpty() ? null : list);
+    }
+
+    private void getNews(User user, Model model) {
+        ResponseSearchNewsDto dto = newsService.searchNews(null, user.getUserId());
+        model.addAttribute("keyword", dto.getKeyword());
+        model.addAttribute("news", dto.getNews());
     }
 }
