@@ -49,14 +49,16 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String login() {
-
+    public String login(Model model) {
+        // 한율 조회
+        homeService.getExchangeRate(model);
         return "home/login";
     }
 
     @GetMapping("/join")
-    public String join() {
-
+    public String join(Model model) {
+        // 한율 조회
+        homeService.getExchangeRate(model);
         return "home/join";
     }
 

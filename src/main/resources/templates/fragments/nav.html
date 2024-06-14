@@ -9,15 +9,215 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/"><h1>Anything</h1></a>
             <div class="collapse navbar-collapse" id="navbarText">
-
                 <div>
                     <th:block th:text="${date}">년월일</th:block>
                     <th:block th:text="${time}">시간</th:block>
+                    <br/>
                     <th:block th:each="e, iterStat : ${exchangeRate}">
-                        <span style="color:red; font-weight:bold" th:text="${e.name}">환율종류</span>
+                        <span style="font-weight:bold" th:text="${e.name}">환율종류</span>
                         <span style="font-weight:bold" th:text="|${e.basePrice}원|">환율</span>
                         <span th:if="${!iterStat.last}"></span>
                     </th:block>
+
+                    <br/>
+
+                    <span id="current-time" style="display:inline-block; width: 160px;"></span>
+
+                    <br/>
+
+                    <span id="stock">
+                    </span>
+
+                    <a href="#" id="add-stock"><img th:src="@{/img/stock-add.png}" alt="Add Stock" src="" style="width:35px;"/></a>
+                    <script>
+                        $(document).ready(function() {
+                            var apiToken = 'cplqv3pr01qn8g1valcgcplqv3pr01qn8g1vald0';
+
+                            // 기존 저장되어 있는 ticker 조회
+                            var storedTickers = localStorage.getItem('tickers');
+                            var tickers = storedTickers ? JSON.parse(storedTickers) : [];
+
+                            // Ticker 저장
+                            function saveTickers(tickers) {
+                                localStorage.setItem('tickers', JSON.stringify(tickers));
+                            }
+
+                            // 미국 시장 개장 여부
+                            function isMarketOpen() {
+                                var now = new Date();
+                                var month = now.getMonth();
+                                var day = now.getDay();
+                                var hour = now.getHours();
+
+                                var isDST = (month > 2 && month < 10) ||
+                                            (month === 2 && (day - (now.getDate() - 1) % 7) >= 8) ||
+                                            (month === 10 && (day - (now.getDate() - 1) % 7) < 1);
+
+                                if (isDST) {
+                                    return (day >= 1 && day <= 5) && ((hour >= 23 || hour < 6));
+                                } else {
+                                    return (day >= 1 && day <= 5) && ((hour >= 22 || hour < 5));
+                                }
+                            }
+
+                            // 미국장 개장했을 경우 API로 실시간 주가 조회
+                            function fetchStockPrice(ticker) {
+                                var url = 'https://finnhub.io/api/v1/quote?symbol=' + ticker + '&token=' + apiToken;
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    success: function(data) {
+                                        var currentPrice = data.c;
+                                        var previousClose = data.pc;
+                                        if(currentPrice > 0) {
+                                            var priceChangePercent = (((currentPrice - previousClose) / previousClose) * 100).toFixed(2);
+                                            var changeText = (priceChangePercent > 0 ? '+' : '') + priceChangePercent + '%';
+                                            localStorage.setItem(ticker, JSON.stringify({ price: currentPrice, previousClose: previousClose }));
+                                            updateStockDisplay(ticker, currentPrice, changeText);
+                                        } else {
+                                            alert('잘못 된 Ticker 입니다.')
+                                        }
+                                    },
+                                    error: function(error) {
+                                        console.log('Error:', error);
+                                    }
+                                });
+                            }
+
+                            function updateStockDisplay(ticker, price, changeText) {
+                                var stockWrap = $(`
+                                    <span class="stock-wrap" style="cursor:pointer; display:inline-block; width: 190px;">
+                                        <span class="ticker" style="font-weight:bold;">
+                                            ${ticker}:
+                                        </span>
+                                        <span class="price">
+                                            ${price}
+                                        </span>
+                                        <span class="change" style="color:${changeText.startsWith('+') ? 'red' : 'blue'};">
+                                            (${changeText})
+                                        </span>
+                                    </span>
+                                `);
+                                $('#stock').append(stockWrap);
+
+                                // 마우스 올렸을 때 "Delete?"로 변경
+                                stockWrap.hover(
+                                    function() {
+                                        var tickerElement = $(this).find('.ticker');
+                                        var priceElement = $(this).find('.price');
+                                        var changeElement = $(this).find('.change');
+                                        tickerElement.data('originalText', tickerElement.text());
+                                        priceElement.data('originalText', priceElement.text());
+                                        changeElement.data('originalText', changeElement.text());
+                                        tickerElement.text('Delete?').css('color', 'red');
+                                        priceElement.text('');
+                                        changeElement.text('');
+                                    },
+                                    function() {
+                                        var tickerElement = $(this).find('.ticker');
+                                        var priceElement = $(this).find('.price');
+                                        var changeElement = $(this).find('.change');
+                                        tickerElement.text(tickerElement.data('originalText')).css('color', ''); // 원래 색상으로 복원
+                                        priceElement.text(priceElement.data('originalText'));
+                                        changeElement.text(changeElement.data('originalText'));
+                                    }
+                                );
+
+                                // 클릭 시 로컬스토리지에서 삭제
+                                stockWrap.click(function() {
+                                    if (confirm('정말로 삭제하시겠습니까?')) {
+                                        var tickerToRemove = $(this).find('.ticker').data('originalText').replace(':', '').replace(/\s+/g, '');;
+                                        tickers = tickers.filter(function(ticker) {
+                                            return ticker !== tickerToRemove;
+                                        });
+                                        saveTickers(tickers);
+                                        localStorage.removeItem(tickerToRemove);
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+
+                            // 로컬스토리지에 저장된 Ticker 조회
+                            function displayStockPrice(ticker) {
+                                var storedData = JSON.parse(localStorage.getItem(ticker));
+                                if (storedData) {
+                                    var price = storedData.price;
+                                    var previousClose = storedData.previousClose;
+                                    var priceChangePercent = (((price - previousClose) / previousClose) * 100).toFixed(2);
+                                    var changeText = (priceChangePercent > 0 ? '+' : '') + priceChangePercent + '%';
+                                    updateStockDisplay(ticker, price, changeText);
+                                }
+                            }
+
+                            function refreshStockPrices() {
+                                $('#stock').empty();
+                                tickers.forEach(function(ticker) {
+                                    if (isMarketOpen()) {
+                                        fetchStockPrice(ticker);
+                                    } else {
+                                        displayStockPrice(ticker);
+                                    }
+                                });
+                            }
+
+                            tickers.forEach(displayStockPrice);
+
+                            // 미국장이 개장했으면 10초마다 API조회
+                            var refreshInterval;
+                            function startRefreshingStocks() {
+                                refreshInterval = setInterval(refreshStockPrices, 10000);
+                            }
+
+                            function stopRefreshingStocks() {
+                                clearInterval(refreshInterval);
+                            }
+
+                            if (isMarketOpen()) {
+                                startRefreshingStocks();
+                            }
+
+                            setInterval(function() {
+                                if (isMarketOpen()) {
+                                    if (!refreshInterval) {
+                                        startRefreshingStocks();
+                                    }
+                                } else {
+                                    if (refreshInterval) {
+                                        stopRefreshingStocks();
+                                    }
+                                }
+                            }, 60000); // 1분마다 시장 개장 여부를 체크
+
+                            $('#add-stock').click(function(event) {
+                                event.preventDefault();
+                                var newTicker = prompt("Enter stock ticker:").trim();
+                                if (newTicker) {
+                                    if (!tickers.includes(newTicker)) {
+                                        tickers.push(newTicker);
+                                        saveTickers(tickers);
+                                        fetchStockPrice(newTicker);
+                                    } else {
+                                        alert('Ticker already exists.');
+                                    }
+                                }
+                            });
+
+                            // 실시간
+                            function updateTime() {
+                                var now = new Date();
+                                var formattedTime = now.getFullYear() + '-' +
+                                                    ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+                                                    ('0' + now.getDate()).slice(-2) + ' ' +
+                                                    ('0' + now.getHours()).slice(-2) + ':' +
+                                                    ('0' + now.getMinutes()).slice(-2) + ':' +
+                                                    ('0' + now.getSeconds()).slice(-2);
+                                $('#current-time').text(formattedTime);
+                            }
+
+                            setInterval(updateTime, 1000);
+                            updateTime();  // 페이지 로드 시 초기 시간을 설정합니다.
+                        });
+                    </script>
                 </div>
 
                 <!-- 비로그인 -->
@@ -30,7 +230,6 @@
                 <div class="navbar-text ms-auto" th:if="${#authorization.expression('isAuthenticated()')}">
                     <button type="button" onclick="location.href='/logout'" class="btn btn-dark">Logout</button>
                 </div>
-
             </div>
         </div>
     </nav>

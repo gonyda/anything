@@ -29,7 +29,7 @@ public class ExchangeRateScheduler {
 
     private final ExchangeRateService exchangeRateService;
 
-    @Scheduled(cron = "0 0 0/3 * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public ResponseEntity<String> getExchangeRate() {
         log.info("## getExchangeRate() START");
         URI uri = UriComponentsBuilder.fromUriString(API_URL)

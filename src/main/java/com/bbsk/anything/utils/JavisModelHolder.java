@@ -11,6 +11,6 @@ public class JavisModelHolder {
     }
 
     private static String create() {
-        return ChatGptModel.GPT_4_o_2024_05_13.getName();
+        return ChatGptModel.GPT_3_5_TURBO_0125.getName();
     }
 }
