@@ -4,31 +4,37 @@
 <header></header>
 
 <body>
-    <th:block th:fragment="fragment-nav">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/"><h1>Anything</h1></a>
-                <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                        </li>
-                    </ul>
+<th:block th:fragment="fragment-nav">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"><h1>Anything</h1></a>
+            <div class="collapse navbar-collapse" id="navbarText">
 
-                    <!-- 비로그인 -->
-                    <span class="navbar-text" th:if="!${#authorization.expression('isAuthenticated()')}">
-                        <button type="button" onclick="location.href='/login'" class="btn btn-dark">Sign In</button>
-                        <button type="button" onclick="location.href='/join'" class="btn btn-dark">Sign Up</button>
-                    </span>
-
-                    <!-- 로그인 -->
-                    <span class="navbar-text" th:if="${#authorization.expression('isAuthenticated()')}">
-                        <button type="button" onclick="location.href='/logout'" class="btn btn-dark">Logout</button>
-                    </span>
-
+                <div>
+                    <th:block th:text="${date}">년월일</th:block>
+                    <th:block th:text="${time}">시간</th:block>
+                    <th:block th:each="e, iterStat : ${exchangeRate}">
+                        <span style="color:red; font-weight:bold" th:text="${e.name}">환율종류</span>
+                        <span style="font-weight:bold" th:text="|${e.basePrice}원|">환율</span>
+                        <span th:if="${!iterStat.last}"></span>
+                    </th:block>
                 </div>
+
+                <!-- 비로그인 -->
+                <div class="navbar-text ms-auto" th:if="!${#authorization.expression('isAuthenticated()')}">
+                    <button type="button" onclick="location.href='/login'" class="btn btn-dark">Sign In</button>
+                    <button type="button" onclick="location.href='/join'" class="btn btn-dark">Sign Up</button>
+                </div>
+
+                <!-- 로그인 -->
+                <div class="navbar-text ms-auto" th:if="${#authorization.expression('isAuthenticated()')}">
+                    <button type="button" onclick="location.href='/logout'" class="btn btn-dark">Logout</button>
+                </div>
+
             </div>
-        </nav>
-    </th:block>
+        </div>
+    </nav>
+</th:block>
 </body>
 
 </html>

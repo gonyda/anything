@@ -1,5 +1,6 @@
 package com.bbsk.anything;
 
+import com.bbsk.anything.exchangeRate.entity.ExchangeRate;
 import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.javis.service.JavisService;
 import com.bbsk.anything.news.service.NewsService;
@@ -9,6 +10,7 @@ import com.bbsk.anything.user.dto.RequestUserDto;
 import com.bbsk.anything.user.entity.User;
 import com.bbsk.anything.user.service.UserService;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import static com.bbsk.anything.schedule.service.ScheduleService.*;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class HomeController {
 
     private final UserService userService;
@@ -39,9 +42,9 @@ public class HomeController {
             getSchedule(user, model);
             // 자비스 채팅 가져오기
             getChat(user, model);
-            // 한율 조회
-            getExchangeRate(model);
         }
+        // 한율 조회
+        getExchangeRate(model);
 
         return "home/home";
     }
@@ -82,6 +85,16 @@ public class HomeController {
     }
 
     private void getExchangeRate(Model model) {
-        model.addAttribute("exchangeRate", exchangeRateService.getExchangeRate());
+        List<ExchangeRate> exchangeRateList = exchangeRateService.getExchangeRate();
+        model.addAttribute("exchangeRate", exchangeRateList);
+        model.addAttribute("date", exchangeRateList.get(0).getDate());
+        model.addAttribute("time", extractHour(exchangeRateList.get(0).getTime()));
+    }
+
+    private String extractHour(String time) {
+        if (time == null || time.length() < 5) {
+            throw new IllegalArgumentException("Invalid time format");
+        }
+        return time.substring(0, 5);
     }
 }
