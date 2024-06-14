@@ -4,6 +4,7 @@ import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.javis.dto.*;
 import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
+import com.bbsk.anything.utils.JavisModelHolder;
 import com.bbsk.anything.weather.constant.BaseDate;
 import com.bbsk.anything.weather.constant.Region;
 import lombok.Getter;
@@ -116,7 +117,7 @@ public class JavisService {
             this.createTime = entity.getCreateTime();
             this.message = entity.getMessage();
             this.totalTokens = entity.getTotalTokens();
-            this.maxTokens = ChatGptModel.GPT_3_5_TURBO_1106.getTokens();
+            this.maxTokens = ChatGptModel.getTokensByName(JavisModelHolder.JAVAIS_MODEL.get());
             this.model = entity.getModel();
 
             return this;

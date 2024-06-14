@@ -2,6 +2,7 @@ package com.bbsk.anything.javis.dto;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.user.entity.User;
+import com.bbsk.anything.utils.JavisModelHolder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -16,7 +17,7 @@ public class RequestChatByUser {
     private List<Message> messages;
     private LocalDateTime createTime;
     private User user;
-    private final String model = ChatGptModel.GPT_3_5_TURBO_0125.getName();
+    private final String model = JavisModelHolder.JAVAIS_MODEL.get();
 
     public void setCreateTime(String createTime) {
         this.createTime = LocalDateTime.parse(createTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

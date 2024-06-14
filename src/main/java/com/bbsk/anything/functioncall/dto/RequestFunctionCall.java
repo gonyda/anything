@@ -2,6 +2,7 @@ package com.bbsk.anything.functioncall.dto;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.functioncall.dto.weather.Functions;
+import com.bbsk.anything.utils.JavisModelHolder;
 import lombok.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 public class RequestFunctionCall {
 
-    private final String model = ChatGptModel.GPT_3_5_TURBO_1106.getName();
+    private final String model = JavisModelHolder.JAVAIS_MODEL.get();
     private List<Object> messages;
     private List<Functions> functions;
 
