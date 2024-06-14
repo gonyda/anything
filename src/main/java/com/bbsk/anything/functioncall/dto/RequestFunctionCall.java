@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 public class RequestFunctionCall {
 
-    private final String model = JavisModelHolder.JAVAIS_MODEL.get();
+    private final String model = JavisModelHolder.get();
     private List<Object> messages;
     private List<Functions> functions;
 

@@ -2,18 +2,12 @@ package com.bbsk.anything.utils;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
 
-public enum JavisModelHolder {
+public class JavisModelHolder {
 
-    JAVAIS_MODEL;
+    private static final String JAVIS_MODEL = create();
 
-    private final String javisModel;
-
-    JavisModelHolder() {
-        this.javisModel = create();
-    }
-
-    public String get() {
-        return this.javisModel;
+    public static String get() {
+        return JAVIS_MODEL;
     }
 
     private static String create() {

@@ -17,7 +17,7 @@ public class RequestChatByUser {
     private List<Message> messages;
     private LocalDateTime createTime;
     private User user;
-    private final String model = JavisModelHolder.JAVAIS_MODEL.get();
+    private final String model = JavisModelHolder.get();
 
     public void setCreateTime(String createTime) {
         this.createTime = LocalDateTime.parse(createTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

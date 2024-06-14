@@ -117,7 +117,7 @@ public class JavisService {
             this.createTime = entity.getCreateTime();
             this.message = entity.getMessage();
             this.totalTokens = entity.getTotalTokens();
-            this.maxTokens = ChatGptModel.getTokensByName(JavisModelHolder.JAVAIS_MODEL.get());
+            this.maxTokens = ChatGptModel.getTokensByName(JavisModelHolder.get());
             this.model = entity.getModel();
 
             return this;
