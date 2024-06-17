@@ -10,13 +10,12 @@
             <a class="navbar-brand" href="/"><h1>Anything</h1></a>
             <div class="collapse navbar-collapse" id="navbarText">
                 <div>
-                    <th:block th:text="${date}">년월일</th:block>
-                    <th:block th:text="${time}">시간</th:block>
-                    <br/>
                     <th:block th:each="e, iterStat : ${exchangeRate}">
-                        <span style="font-weight:bold" th:text="${e.name}">환율종류</span>
-                        <span style="font-weight:bold" th:text="|${e.basePrice}원|">환율</span>
-                        <span th:if="${!iterStat.last}"></span>
+                        <span id="exchangeRate-wrap" style="display:inline-block; width:150px">
+                            <span style="font-weight:bold" th:text="${e.name}">환율종류</span>
+                            <span style="font-weight:bold" th:text="|${e.basePrice}원|">환율</span>
+                            <span th:if="${!iterStat.last}"></span>
+                        </span>
                     </th:block>
 
                     <br/>
