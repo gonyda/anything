@@ -2,6 +2,9 @@ package com.bbsk.anything.utils;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
 
+/*
+* Javis에 사용되는 AI 모델 정의
+* */
 public class JavisModelHolder {
 
     private static final String JAVIS_MODEL = create();

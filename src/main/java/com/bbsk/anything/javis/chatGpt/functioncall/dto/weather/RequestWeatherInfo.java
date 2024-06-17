@@ -1,4 +1,4 @@
-package com.bbsk.anything.functioncall.dto.weather;
+package com.bbsk.anything.javis.chatGpt.functioncall.dto.weather;
 
 import lombok.*;
 

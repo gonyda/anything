@@ -1,7 +1,6 @@
-package com.bbsk.anything.functioncall.dto;
+package com.bbsk.anything.javis.chatGpt.functioncall.dto;
 
-import com.bbsk.anything.javis.constant.ChatGptModel;
-import com.bbsk.anything.functioncall.dto.weather.Functions;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.weather.Functions;
 import com.bbsk.anything.utils.JavisModelHolder;
 import lombok.*;
 

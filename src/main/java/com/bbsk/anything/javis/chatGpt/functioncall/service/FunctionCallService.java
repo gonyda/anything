@@ -1,11 +1,11 @@
-package com.bbsk.anything.functioncall.service;
+package com.bbsk.anything.javis.chatGpt.functioncall.service;
 
-import com.bbsk.anything.functioncall.dto.RequestFunctionCall;
-import com.bbsk.anything.functioncall.dto.weather.Functions;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.RequestFunctionCall;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.weather.Functions;
 import com.bbsk.anything.javis.constant.ChatGptApi;
 import com.bbsk.anything.javis.dto.RequestChatByUser;
 import com.bbsk.anything.javis.dto.ResponseChatByGpt;
-import com.bbsk.anything.functioncall.dto.ResponseFunctionCall;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.ResponseFunctionCall;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,13 @@
-package com.bbsk.anything.weather.service;
+package com.bbsk.anything.javis.weather.service;
 
-import com.bbsk.anything.functioncall.dto.RequestFunctionCall;
-import com.bbsk.anything.functioncall.dto.ResponseFunctionCall;
-import com.bbsk.anything.functioncall.dto.weather.RequestWeatherInfo;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.RequestFunctionCall;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.ResponseFunctionCall;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.weather.RequestWeatherInfo;
 import com.bbsk.anything.utils.ObjectMapperHolder;
-import com.bbsk.anything.weather.constant.BaseDate;
-import com.bbsk.anything.weather.constant.Region;
-import com.bbsk.anything.weather.constant.WeatherApi;
-import com.bbsk.anything.weather.dto.ResponseWeatherDto;
+import com.bbsk.anything.javis.weather.constant.BaseDate;
+import com.bbsk.anything.javis.weather.constant.Region;
+import com.bbsk.anything.javis.weather.constant.WeatherApi;
+import com.bbsk.anything.javis.weather.dto.ResponseWeatherDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;

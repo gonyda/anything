@@ -1,4 +1,4 @@
-package com.bbsk.anything.functioncall.dto;
+package com.bbsk.anything.javis.chatGpt.functioncall.dto;
 
 import lombok.Getter;
 import lombok.ToString;

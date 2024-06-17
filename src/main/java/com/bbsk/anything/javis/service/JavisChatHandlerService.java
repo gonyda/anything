@@ -1,13 +1,14 @@
 package com.bbsk.anything.javis.service;
 
+import com.bbsk.anything.javis.chatGpt.service.ChatGptApiService;
 import com.bbsk.anything.javis.dto.RequestChatByUser;
 import com.bbsk.anything.javis.dto.ResponseChatByGpt;
 import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
-import com.bbsk.anything.weather.constant.BaseDate;
-import com.bbsk.anything.weather.constant.Region;
-import com.bbsk.anything.weather.dto.ResponseWeatherDto;
-import com.bbsk.anything.weather.service.WeatherApiService;
+import com.bbsk.anything.javis.weather.constant.BaseDate;
+import com.bbsk.anything.javis.weather.constant.Region;
+import com.bbsk.anything.javis.weather.dto.ResponseWeatherDto;
+import com.bbsk.anything.javis.weather.service.WeatherApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

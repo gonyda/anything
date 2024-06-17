@@ -1,13 +1,13 @@
-package com.bbsk.anything.javis.service;
+package com.bbsk.anything.javis.chatGpt.service;
 
 import com.bbsk.anything.javis.constant.ChatGptApi;
 import com.bbsk.anything.javis.dto.*;
-import com.bbsk.anything.functioncall.dto.RequestFunctionCall;
-import com.bbsk.anything.functioncall.dto.ResponseFunctionCall;
-import com.bbsk.anything.functioncall.service.FunctionCallService;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.RequestFunctionCall;
+import com.bbsk.anything.javis.chatGpt.functioncall.dto.ResponseFunctionCall;
+import com.bbsk.anything.javis.chatGpt.functioncall.service.FunctionCallService;
 import com.bbsk.anything.utils.ObjectMapperHolder;
-import com.bbsk.anything.weather.dto.ResponseWeatherDto;
-import com.bbsk.anything.weather.service.WeatherApiService;
+import com.bbsk.anything.javis.weather.dto.ResponseWeatherDto;
+import com.bbsk.anything.javis.weather.service.WeatherApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

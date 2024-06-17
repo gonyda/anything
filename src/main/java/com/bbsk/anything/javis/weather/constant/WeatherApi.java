@@ -1,4 +1,4 @@
-package com.bbsk.anything.weather.constant;
+package com.bbsk.anything.javis.weather.constant;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
-package com.bbsk.anything.weather.dto;
+package com.bbsk.anything.javis.weather.dto;
 
-import com.bbsk.anything.weather.constant.BaseDate;
+import com.bbsk.anything.javis.weather.constant.BaseDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.ToString;
