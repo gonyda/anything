@@ -20,10 +20,6 @@
 
                     <br/>
 
-                    <span id="current-time" style="display:inline-block; width: 160px;"></span>
-
-                    <br/>
-
                     <span id="stock">
                     </span>
 
@@ -189,32 +185,17 @@
 
                             $('#add-stock').click(function(event) {
                                 event.preventDefault();
-                                var newTicker = prompt("Enter stock ticker:").trim();
+                                var newTicker = prompt("티커를 입력해주세요.").trim();
                                 if (newTicker) {
                                     if (!tickers.includes(newTicker)) {
                                         tickers.push(newTicker);
                                         saveTickers(tickers);
                                         fetchStockPrice(newTicker);
                                     } else {
-                                        alert('Ticker already exists.');
+                                        alert('이미 등록된 티커입니다.');
                                     }
                                 }
                             });
-
-                            // 실시간
-                            function updateTime() {
-                                var now = new Date();
-                                var formattedTime = now.getFullYear() + '-' +
-                                                    ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
-                                                    ('0' + now.getDate()).slice(-2) + ' ' +
-                                                    ('0' + now.getHours()).slice(-2) + ':' +
-                                                    ('0' + now.getMinutes()).slice(-2) + ':' +
-                                                    ('0' + now.getSeconds()).slice(-2);
-                                $('#current-time').text(formattedTime);
-                            }
-
-                            setInterval(updateTime, 1000);
-                            updateTime();  // 페이지 로드 시 초기 시간을 설정합니다.
                         });
                     </script>
                 </div>
