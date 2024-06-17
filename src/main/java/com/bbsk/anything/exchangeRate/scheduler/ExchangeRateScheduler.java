@@ -1,5 +1,6 @@
 package com.bbsk.anything.exchangeRate.scheduler;
 
+import com.bbsk.anything.exchangeRate.constant.ApiConfig;
 import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,18 +24,14 @@ import java.util.List;
 @Slf4j
 public class ExchangeRateScheduler {
 
-    private final static String API_URL = "https://quotation-api-cdn.dunamu.com";
-    private final static String API_URL_PATH = "/v1/forex/recent";
-    private final static Object[] PARAMS = new String[]{"FRX.KRWUSD", "FRX.KRWJPY", "FRX.KRWEUR"};
-
     private final ExchangeRateService exchangeRateService;
 
     @Scheduled(cron = "0 0 * * * ?")
-    public ResponseEntity<String> getExchangeRate() {
+    public void getExchangeRate() {
         log.info("## getExchangeRate() START");
-        URI uri = UriComponentsBuilder.fromUriString(API_URL)
-                .path(API_URL_PATH)
-                .queryParam("codes", PARAMS)
+        URI uri = UriComponentsBuilder.fromUriString(ApiConfig.API_URL.getValue())
+                .path(ApiConfig.API_URL_PATH.getValue())
+                .queryParam("codes", ApiConfig.PARAMS.getArrValue())
                 .encode()
                 .build()
                 .toUri();
@@ -45,7 +42,6 @@ public class ExchangeRateScheduler {
                     Arrays.stream(ObjectMapperHolder.INSTANCE.get().readValue(responseEntity.getBody(), ExchangeRateResponseDto[].class))
                     .toList();
             exchangeRateService.addExchangeInfo(exchangeRateResponseDtoList);
-            return null;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage());
         }
