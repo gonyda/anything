@@ -29,26 +29,32 @@ public class NewsService {
     @Transactional
     public ResponseSearchNewsDto searchNews(String keyword, String userId) {
         User user = userRepository.findById(userId).orElseThrow(IllegalAccessError::new);
+        return StringUtils.isEmpty(keyword) ?
+                handleEmptyKeyword(user) :
+                handleNonEmptyKeyword(keyword, user);
+    }
 
-        if (StringUtils.isEmpty(keyword)) {
-            // 유저가 keyword를 가지고 있는 지
-            if (user.getNewsKeyword() == null) {
-                return new ResponseSearchNewsDto("", null);
-            } else {
-                // keyword count +1
-                user.getNewsKeyword().updateSearchCount();
-            }
+    private ResponseSearchNewsDto handleEmptyKeyword(User user) {
+        // 유저가 keyword를 가지고 있는 지
+        if (user.getNewsKeyword() == null) {
+            return new ResponseSearchNewsDto("", null);
         } else {
-            NewsKeyword findKeyword = newsKeywordRepository.findByKeyword(keyword);
-
-            // 유저 keyword 세팅
-            user.updateKeyword(
-                    findKeyword == null ?
-                    newsKeywordRepository.save(new NewsKeyword().initKeyword(keyword)) : // keyword insert
-                    findKeyword.updateSearchCount() // keyword count +1
-            );
+            // keyword count +1
+            user.getNewsKeyword().updateSearchCount();
+            String userKeyword = user.getNewsKeyword().getKeyword();
+            return new ResponseSearchNewsDto(userKeyword, naverNewsApiService.getNews(userKeyword));
         }
+    }
 
+    private ResponseSearchNewsDto handleNonEmptyKeyword(String keyword, User user) {
+        NewsKeyword findKeyword = newsKeywordRepository.findByKeyword(keyword);
+
+        // 유저 keyword 세팅
+        user.updateKeyword(
+                findKeyword == null ?
+                        newsKeywordRepository.save(new NewsKeyword().initKeyword(keyword)) : // keyword insert
+                        findKeyword.updateSearchCount() // keyword count +1
+        );
         String userKeyword = user.getNewsKeyword().getKeyword();
         return new ResponseSearchNewsDto(userKeyword, naverNewsApiService.getNews(userKeyword));
     }
