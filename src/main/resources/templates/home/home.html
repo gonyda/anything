@@ -30,6 +30,8 @@
 
 </head>
 <body>
+    <!-- nav js -->
+    <th:block th:replace="~{/fragments/nav-script :: fragment-nav-script}"></th:block>
     <!-- news js -->
     <th:block th:replace="~{/fragments/news-script :: fragment-news-script}"></th:block>
     <!-- schedule js -->
@@ -100,7 +102,7 @@
                     </th:block>
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text">@</span>
+                    <span class="input-group-text">#</span>
                     <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
                            id="val-newsKeyword" th:value="${keyword} ?: ''">
                     </script>

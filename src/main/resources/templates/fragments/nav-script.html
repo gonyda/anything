@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-nav-script">
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            const apiToken = 'cplqv3pr01qn8g1valcgcplqv3pr01qn8g1vald0';
+            let storedTickers = localStorage.getItem('tickers');
+            let tickers = storedTickers ? JSON.parse(storedTickers) : [];
+
+            // 티커 목록을 로컬스토리지에 저장하는 함수
+            const saveTickers = (tickers) => localStorage.setItem('tickers', JSON.stringify(tickers));
+
+            // 시장이 열려 있는지 확인하는 함수
+            const isMarketOpen = () => {
+                const now = new Date();
+                const month = now.getMonth();
+                const day = now.getDay();
+                const hour = now.getHours();
+
+                const isDST = (month > 2 && month < 10) ||
+                    (month === 2 && (day - (now.getDate() - 1) % 7) >= 8) ||
+                    (month === 10 && (day - (now.getDate() - 1) % 7) < 1);
+
+                if (isDST) {
+                    return (day >= 1 && day <= 5) && ((hour >= 23 || hour < 6));
+                } else {
+                    return (day >= 1 && day <= 5) && ((hour >= 22 || hour < 5));
+                }
+            };
+
+            // 주식 가격을 가져오는 함수
+            const fetchStockPrice = (ticker) => {
+                const url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${apiToken}`;
+                $.get(url, (data) => {
+                    const { c: currentPrice, pc: previousClose } = data;
+                    if (currentPrice > 0) {
+                        const priceChangePercent = (((currentPrice - previousClose) / previousClose) * 100).toFixed(2);
+                        const changeText = (priceChangePercent > 0 ? '+' : '') + priceChangePercent + '%';
+                        localStorage.setItem(ticker, JSON.stringify({ price: currentPrice, previousClose }));
+                        updateStockDisplay(ticker, currentPrice, changeText);
+                    } else {
+                        alert('잘못 된 Ticker 입니다.');
+                    }
+                }).fail((error) => console.error('Error:', error));
+            };
+
+            // 주식 정보를 업데이트하는 함수
+            const updateStockDisplay = (ticker, price, changeText) => {
+                let stockWrap = $(`#stock .stock-wrap[data-ticker="${ticker}"]`);
+                if (stockWrap.length === 0) {
+                    stockWrap = $(`
+                        <span class="stock-wrap" data-ticker="${ticker}" style="cursor:pointer; display:inline-block; margin-right: 15px">
+                            <span class="ticker" style="font-weight:bold;">${ticker}:</span>
+                            <span class="price">${price}</span>
+                            <span class="change" style="color:${changeText.startsWith('+') ? 'red' : 'blue'};">(${changeText})</span>
+                        </span>
+                    `);
+                    $('#stock').append(stockWrap);
+
+                    var width = stockWrap.css('width');
+                    stockWrap.hover(
+                        function() {
+                            $(this).find('.ticker').text('Delete?').css('color', 'red');
+                            $(this).find('.price, .change').empty();
+                            $(this).css('width', width);
+                        },
+                        function() {
+                            $(this).find('.ticker').text(`${ticker}:`).css('color', '');
+                            $(this).find('.price').text(price);
+                            $(this).find('.change').text(`(${changeText})`);
+                        }
+                    );
+
+                    stockWrap.click(function() {
+                        if (confirm('정말로 삭제하시겠습니까?')) {
+                            tickers = tickers.filter(t => t !== ticker);
+                            saveTickers(tickers);
+                            localStorage.removeItem(ticker);
+                            $(this).remove();
+                        }
+                    });
+                } else {
+                    stockWrap.find('.price').text(price);
+                    stockWrap.find('.change').text(`(${changeText})`).css('color', changeText.startsWith('+') ? 'red' : 'blue');
+                }
+            };
+
+            // 로컬 스토리지에 저장된 주식 정보를 표시하는 함수
+            const displayStockPrice = (ticker) => {
+                const storedData = JSON.parse(localStorage.getItem(ticker));
+                if (storedData) {
+                    const { price, previousClose } = storedData;
+                    const priceChangePercent = (((price - previousClose) / previousClose) * 100).toFixed(2);
+                    const changeText = (priceChangePercent > 0 ? '+' : '') + priceChangePercent + '%';
+                    updateStockDisplay(ticker, price, changeText);
+                }
+            };
+
+            // 주식 가격을 갱신하는 함수
+            const refreshStockPrices = () => {
+                tickers.forEach(ticker => isMarketOpen() ? fetchStockPrice(ticker) : displayStockPrice(ticker));
+            };
+
+            // 주식 가격 갱신을 주기적으로 실행하기 위한 변수
+            let refreshInterval;
+            const startRefreshingStocks = () => refreshInterval = setInterval(refreshStockPrices, 10000);
+            const stopRefreshingStocks = () => clearInterval(refreshInterval);
+
+            if (isMarketOpen()) startRefreshingStocks();
+
+            // 시장 개폐 여부를 확인하여 주기적으로 갱신 시작/정지
+            setInterval(() => isMarketOpen() ? startRefreshingStocks() : stopRefreshingStocks(), 60000);
+
+            // 주식 추가 버튼 클릭 이벤트
+            $('#add-stock').click((event) => {
+                event.preventDefault();
+                const newTicker = prompt("티커를 입력해주세요.").trim();
+                if (newTicker && !tickers.includes(newTicker)) {
+                    tickers.push(newTicker);
+                    saveTickers(tickers);
+                    fetchStockPrice(newTicker);
+                } else {
+                    alert('이미 등록된 티커입니다.');
+                }
+            });
+
+            // 페이지 로드 시 저장된 주식 정보를 표시
+            tickers.forEach(displayStockPrice);
+        });
+    </script>
+</head>
