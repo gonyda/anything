@@ -45,11 +45,14 @@ public class HomeService {
         model.addAttribute("time", extractHour(exchangeRateList.get(0).getTime()));
     }
 
+    public void findTop5ByOrderBySearchCountDesc(Model model) {
+        model.addAttribute("hotKeywordList", newsService.findTop5ByOrderBySearchCountDesc());
+    }
+
     private String extractHour(String time) {
         if (time == null || time.length() < 5) {
             throw new IllegalArgumentException("Invalid time format");
         }
         return time.substring(0, 5);
     }
-
 }

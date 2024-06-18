@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.bbsk.anything.news.service.NaverNewsApiService.*;
 
 @Service
@@ -32,6 +34,13 @@ public class NewsService {
         return StringUtils.isEmpty(keyword) ?
                 handleEmptyKeyword(user) :
                 handleNonEmptyKeyword(keyword, user);
+    }
+
+    /*
+     * 검색수 상위 5개 조회
+     * */
+    public List<NewsKeyword> findTop5ByOrderBySearchCountDesc() {
+        return newsKeywordRepository.findTop5ByOrderBySearchCountDesc();
     }
 
     private ResponseSearchNewsDto handleEmptyKeyword(User user) {

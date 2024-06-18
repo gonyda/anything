@@ -41,6 +41,8 @@ public class HomeController {
             homeService.getSchedule(user, model);
             // 자비스 채팅 조회
             homeService.getChat(user, model);
+            // 검색순 상위 5개 조회
+            homeService.findTop5ByOrderBySearchCountDesc(model);
         }
         // 한율 조회
         homeService.getExchangeRate(model);

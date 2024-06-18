@@ -90,6 +90,14 @@
                     <h1 class="text-start">
                         <span class="badge bg-dark">뉴스</span>
                     </h1>
+                    <!-- 로그인 했을 시 -->
+                    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                        <span class="hotKeyword-wrap" style="margin-left: 20px; color:gray">
+                            <th:block th:each="e: ${hotKeywordList}">
+                                <span class="hotKeyword" style="cursor: pointer" th:text="|#${e.keyword}|">#애플</span>
+                            </th:block>
+                        </span>
+                    </th:block>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">@</span>

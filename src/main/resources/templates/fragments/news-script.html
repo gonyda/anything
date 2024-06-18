@@ -90,6 +90,13 @@
                     }
                 })
             }
+
+            // 핫키워드 클릭 시 해당 키워드로 뉴스 검색
+            $('.hotKeyword').click(function() {
+                var clickedKeyword = $(this).text().replace('#', '').trim()
+                $('#val-newsKeyword').val(clickedKeyword);
+                callbackSearchNews()
+            })
         });
     </script>
 </head>
