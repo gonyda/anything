@@ -23,13 +23,11 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     public List<ResponseScheduleDto> findAllByUserId(String userId) {
-        List<ResponseScheduleDto> list = new ArrayList<>();
-
-        scheduleRepository.findAllByUserId(userId).stream().forEach(e ->{
-            list.add(new ResponseScheduleDto().toDto(e));
-        });
-
-        return list;
+        return scheduleRepository.findAllByUserId(userId).stream()
+                .map(e -> {
+                    return new ResponseScheduleDto().toDto(e);
+                })
+                .toList();
     }
 
     @Transactional
