@@ -30,15 +30,17 @@
             $('#val-newsKeyword').keypress(function(e) {
                 if (e.which === 13) {
                     e.preventDefault();
-                    callbackSearchNews(); // 검색 함수 호출
+                    callbackSearchNews(false); // 검색 함수 호출
                 }
             });
 
             // 뉴스 검색 이벤트 등록
-            $('#btn-searchNews').click(callbackSearchNews)
+            $('#btn-searchNews').click(function() {
+              callbackSearchNews(false);
+            });
 
             // 뉴스 검색 이벤트
-            function callbackSearchNews() {
+            function callbackSearchNews(isScheduling) {
                 var keyword = $('#val-newsKeyword').val();
 
                 if (![[${#authorization.expression('isAuthenticated()')}]]) {
@@ -52,23 +54,28 @@
                 }
 
                 $.ajax({
-                    type : 'get',           // 타입 (get, post, put 등등)
-                    url : '/news/' + keyword,           // 요청할 서버url
-                    dataType : 'json',       // 데이터 타입 (html, xml, json, text 등등)
+                    type: 'get', // 타입 (get, post, put 등등)
+                    url: '/news/' + keyword, // 요청할 서버url
+                    dataType: 'json', // 데이터 타입 (html, xml, json, text 등등)
                     /*
-                        headers : {              // Http header
+                        headers : { // Http header
                             "Content-Type" : "application/json"
                         },
-                        data : JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                        data : JSON.stringify({ // 보낼 데이터 (Object , String, Array)
                             "keyword" : keyword
                         }),
                     */
-                    success : function(res) { // 결과 성공 콜백함수
+                    success: function (res) { // 결과 성공 콜백함수
+                        var prevNews = []
+                        $.each($('#newsList .newsTitle'), function (i, e) {
+                            prevNews.push($(e).text());
+                        })
+
                         // 뉴스리스트 지우기
                         $('#newsList').empty();
 
                         // 새로운 news list
-                        $.each(res.news.items, function(index, e) {
+                        $.each(res.news.items, function (index, e) {
                             var newsItemHtml = `
                                 <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
@@ -84,18 +91,66 @@
 
                         // 뉴스 제목 자르기
                         titleLength();
+
+                        var newNews = []
+                        $.each($('#newsList .newsTitle'), function (i, e) {
+                            newNews.push($(e).text());
+                        })
+
+                        // 새로운 뉴스 알림 보내기
+                        if(isScheduling) {
+                            sendAlmNewNews(prevNews, newNews, res)
+                        }
                     },
-                    error : function(request, status, error) { // 결과 에러 콜백함수
+                    error: function (request, status, error) { // 결과 에러 콜백함수
                         console.log(error)
                     }
-                })
+                });
+            }
+
+            function sendAlmNewNews(prevNews, newNews, res) {
+                // 새로운 뉴스 알림 보내기
+                var diffNews = newNews.filter(function (newsTitle) {
+                    return !prevNews.includes(newsTitle);
+                });
+
+                if (diffNews.length > 0) {
+                    // 사용자 권한 요청
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            diffNews.forEach(function (newsTitle, index) {
+                                setTimeout(() => {
+                                    // 해당 뉴스의 링크 찾기
+                                    var newsLink = res.news.items.find(item => item.title === newsTitle).link;
+
+                                    // 푸시 알림 생성
+                                    var notification = new Notification("새로운 뉴스", {
+                                        body: newsTitle,
+                                        requireInteraction: true // 사용자가 상호작용할 때까지 알림 유지
+                                    });
+
+                                    // 알림 클릭 시 뉴스 링크로 이동
+                                    notification.onclick = function () {
+                                        window.open(newsLink, '_blank');
+                                    };
+                                }, index * 1000); // 각 알림 사이에 1초 지연
+                            });
+                        }
+                    });
+                }
+            }
+
+            if ([[${#authorization.expression('isAuthenticated()')}]] && $('#val-newsKeyword').val()) {
+                setInterval(function() {
+                  callbackSearchNews(true);
+                }, 60000);
             }
 
             // 핫키워드 클릭 시 해당 키워드로 뉴스 검색
             $('.hotKeyword').click(function() {
                 var clickedKeyword = $(this).text().replace('#', '').trim()
                 $('#val-newsKeyword').val(clickedKeyword);
-                callbackSearchNews()
+                callbackSearchNews(false)
             })
         });
     </script>
