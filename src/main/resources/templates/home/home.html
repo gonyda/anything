@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="~{/fragments/header :: fragment-header}"></th:block>
+    <th:block th:replace="~{/fragments/html/header :: fragment-header}"></th:block>
 
     <style>
         .fixed-left-btn {
@@ -31,16 +31,16 @@
 </head>
 <body>
     <!-- nav js -->
-    <th:block th:replace="~{/fragments/nav-script :: fragment-nav-script}"></th:block>
+    <th:block th:replace="~{/fragments/js/nav-script :: fragment-nav-script}"></th:block>
     <!-- news js -->
-    <th:block th:replace="~{/fragments/news-script :: fragment-news-script}"></th:block>
+    <th:block th:replace="~{/fragments/js/news-script :: fragment-news-script}"></th:block>
     <!-- schedule js -->
-    <th:block th:replace="~{/fragments/schedule-script :: fragment-schedule-script}"></th:block>
+    <th:block th:replace="~{/fragments/js/schedule-script :: fragment-schedule-script}"></th:block>
     <!-- javis js -->
-    <th:block th:replace="~{/fragments/javis-script :: fragment-javis-script}"></th:block>
+    <th:block th:replace="~{/fragments/js/javis-script :: fragment-javis-script}"></th:block>
 
     <!-- nav -->
-    <th:block th:replace="~{/fragments/nav :: fragment-nav}"></th:block>
+    <th:block th:replace="~{/fragments/html/nav :: fragment-nav}"></th:block>
 
     <!-- 자비스 -->
     <button class="btn btn-dark fixed-left-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">

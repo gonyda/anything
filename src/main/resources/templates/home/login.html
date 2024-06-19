@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="~{/fragments/header :: fragment-header}"></th:block>
+    <th:block th:replace="~{/fragments/html/header :: fragment-header}"></th:block>
 </head>
 
 <body>
-    <th:block th:replace="~{/fragments/nav :: fragment-nav}"></th:block>
+    <th:block th:replace="~{/fragments/html/nav :: fragment-nav}"></th:block>
 
     <div class="container mt-5">
         <form action="/login-process" method="post">
