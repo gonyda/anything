@@ -6,6 +6,8 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    session:
+      timeout: 6h
 
 # MySQL 및 JPA 설정
 spring:
@@ -33,3 +35,9 @@ spring:
 logging.level:
   org.hibernate.orm.jdbc.bind: trace
   root: info
+
+# Chrome Driver
+anything:
+  chrome:
+    driver:
+      path: /Users/gony/chromedriver-mac-arm64/chromedriver
