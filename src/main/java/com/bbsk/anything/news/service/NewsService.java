@@ -5,6 +5,7 @@ import com.bbsk.anything.news.repository.NewsKeywordRepository;
 import com.bbsk.anything.user.entity.User;
 import com.bbsk.anything.user.repository.UserRepository;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +17,12 @@ import static com.bbsk.anything.news.service.NaverNewsApiService.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class NewsService {
 
     private final NewsKeywordRepository newsKeywordRepository;
     private final UserRepository userRepository;
-    private final NaverNewsApiService naverNewsApiService;
+    private final NewsSearchHandlingService newsSearchHandlingService;
 
     /**
      * 네이버 뉴스 검색
@@ -32,8 +34,8 @@ public class NewsService {
     public ResponseSearchNewsDto searchNews(String keyword, String userId) {
         User user = userRepository.findById(userId).orElseThrow(IllegalAccessError::new);
         return StringUtils.isEmpty(keyword) ?
-                handleEmptyKeyword(user) :
-                handleNonEmptyKeyword(keyword, user);
+                newsSearchHandlingService.handleEmptyKeyword(user) :
+                newsSearchHandlingService.handleNonEmptyKeyword(keyword, user);
     }
 
     /*
@@ -41,31 +43,6 @@ public class NewsService {
      * */
     public List<NewsKeyword> findTop5ByOrderBySearchCountDesc() {
         return newsKeywordRepository.findTop5ByOrderBySearchCountDesc();
-    }
-
-    private ResponseSearchNewsDto handleEmptyKeyword(User user) {
-        // 유저가 keyword를 가지고 있는 지
-        if (user.getNewsKeyword() == null) {
-            return new ResponseSearchNewsDto("", null);
-        } else {
-            // keyword count +1
-            user.getNewsKeyword().updateSearchCount();
-            String userKeyword = user.getNewsKeyword().getKeyword();
-            return new ResponseSearchNewsDto(userKeyword, naverNewsApiService.getNews(userKeyword));
-        }
-    }
-
-    private ResponseSearchNewsDto handleNonEmptyKeyword(String keyword, User user) {
-        NewsKeyword findKeyword = newsKeywordRepository.findByKeyword(keyword);
-
-        // 유저 keyword 세팅
-        user.updateKeyword(
-                findKeyword == null ?
-                        newsKeywordRepository.save(new NewsKeyword().initKeyword(keyword)) : // keyword insert
-                        findKeyword.updateSearchCount() // keyword count +1
-        );
-        String userKeyword = user.getNewsKeyword().getKeyword();
-        return new ResponseSearchNewsDto(userKeyword, naverNewsApiService.getNews(userKeyword));
     }
 
     /**
