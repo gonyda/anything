@@ -1,4 +1,4 @@
-package com.bbsk.anything.utils;
+package com.bbsk.anything.javis.utils;
 
 import com.bbsk.anything.javis.constant.ChatGptModel;
 

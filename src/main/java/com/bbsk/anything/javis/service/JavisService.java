@@ -4,7 +4,7 @@ import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.javis.dto.*;
 import com.bbsk.anything.javis.entity.Javis;
 import com.bbsk.anything.javis.repository.JavisRepository;
-import com.bbsk.anything.utils.JavisModelHolder;
+import com.bbsk.anything.javis.utils.JavisModelHolder;
 import com.bbsk.anything.javis.weather.constant.BaseDate;
 import com.bbsk.anything.javis.weather.constant.Region;
 import lombok.Getter;

@@ -1,14 +1,12 @@
 package com.bbsk.anything.javis.dto;
 
-import com.bbsk.anything.javis.constant.ChatGptModel;
 import com.bbsk.anything.user.entity.User;
-import com.bbsk.anything.utils.JavisModelHolder;
+import com.bbsk.anything.javis.utils.JavisModelHolder;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
