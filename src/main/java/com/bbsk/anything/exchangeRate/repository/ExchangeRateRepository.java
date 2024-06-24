@@ -18,6 +18,7 @@ public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long
                        "    GROUP BY code " +
                           ") sub " +
                      "ON e.code = sub.code AND CONCAT(e.date, ' ', e.time) = sub.max_date_time " +
-                     "WHERE e.code IN (:codes)", nativeQuery = true)
+                     "WHERE e.code IN (:codes)" +
+                     "LIMIT 3", nativeQuery = true)
     List<ExchangeRate> findLatestExchangeRatesByCodes(@Param("codes") List<String> codes);
 }
