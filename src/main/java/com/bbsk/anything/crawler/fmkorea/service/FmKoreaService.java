@@ -33,10 +33,6 @@ public class FmKoreaService {
         footBallNewsRepository.saveAll(footballNews);
     }
 
-    public List<FootballNews> findTop22ByOrderByRegDtDesc() {
-        return footBallNewsRepository.findTop20ByOrderByRegDtDesc();
-    }
-
     public List<FootballNews> findTop20ByOrderByRegDtDesc() {
         return footBallNewsRepository.findTop20ByOrderByRegDtDesc();
     }

@@ -20,7 +20,7 @@ public class FmKoreaScheduler {
 
     private final FmKoreaService fmKoreaService;
 
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */10 * * * ?")
     public void getFmKoreaByFootballNews() {
         log.info("## football news INSERT START");
 
@@ -44,11 +44,12 @@ public class FmKoreaScheduler {
         // 정렬 역순
         Collections.reverse(toSaveList);
         // 저장되어 있는 뉴스 리스트
-        List<FootballNews> savedList = fmKoreaService.findTop22ByOrderByRegDtDesc();
+        List<FootballNews> savedList = fmKoreaService.findTop20ByOrderByRegDtDesc();
         // 새로운 뉴스 리스트
         List<FootballNews> newNewsList = toSaveList.stream()
                                                 .filter(news -> savedList.stream().noneMatch(savedNews -> savedNews.getLink().equals(news.getLink())))
                                                 .toList();
+        log.error("## new news list size(): {}", newNewsList.size());
         fmKoreaService.addFootballNews(newNewsList);
 
         log.info("## football news INSERT END");
