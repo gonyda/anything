@@ -1,5 +1,7 @@
 package com.bbsk.anything.home.service;
 
+import com.bbsk.anything.crawler.fmkorea.entity.FootballNews;
+import com.bbsk.anything.crawler.fmkorea.service.FmKoreaService;
 import com.bbsk.anything.exchangeRate.entity.ExchangeRate;
 import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.javis.service.JavisService;
@@ -22,6 +24,7 @@ public class HomeService {
     private final ScheduleService scheduleService;
     private final JavisService javisService;
     private final ExchangeRateService exchangeRateService;
+    private final FmKoreaService fmKoreaService;
 
     public void getChat(User user, Model model) {
         model.addAttribute("chat", javisService.findAllByUser(user.getUserId()));
@@ -47,6 +50,10 @@ public class HomeService {
 
     public void findTop5ByOrderBySearchCountDesc(Model model) {
         model.addAttribute("hotKeywordList", newsService.findTop5ByOrderBySearchCountDesc());
+    }
+
+    public void findTop20ByOrderByRegDtDesc(Model model) {
+        model.addAttribute("footballNewsList", fmKoreaService.findTop20ByOrderByRegDtDesc());
     }
 
     private String extractHour(String time) {

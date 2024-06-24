@@ -43,6 +43,9 @@ public class HomeController {
             homeService.getChat(user, model);
             // 검색순 상위 5개 조회
             homeService.findTop5ByOrderBySearchCountDesc(model);
+            // 펨코 해외축구 뉴스
+            // 상위 20개 조회
+            homeService.findTop20ByOrderByRegDtDesc(model);
         }
         // 한율 조회
         homeService.getExchangeRate(model);

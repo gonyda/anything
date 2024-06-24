@@ -157,6 +157,32 @@
                 </div>
             </div>
 
+            <!-- 해외축구 뉴스 -->
+            <div class="col">
+                <div style="display: flex; align-items: center">
+                    <h1 class="text-start">
+                        <span class="badge bg-dark">해외축구 뉴스</span>
+                    </h1>
+                </div>
+                <div class="overflow-auto" style="max-height: 81vh">
+                    <!------------------------------------------ 해외축구 뉴스 start ------------------------------------------>
+                    <div class="list-group" id="footballNewsList">
+                        <th:block th:each="e : ${footballNewsList}">
+                            <a th:href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1" th:text="${e.title}">
+                                        뉴스 제목
+                                    </h5>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <!------------------------------------------ 해외축구 뉴스 end ------------------------------------------>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px">
             <!-- 일정 -->
             <div class="col">
                 <h1 class="text-start"><span class="badge bg-dark">일정</span></h1>
@@ -188,7 +214,7 @@
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1" th:text="${#temporals.format(e.date, 'yyyy-MM-dd HH:mm')} + ' ' + ${e.dayOfWeek}">2023-01-05 23:40 화요일</h5>
                                             <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
-                                                th:id="${e.scheduleId}">
+                                               th:id="${e.scheduleId}">
                                             </i>
                                             <!-- 일정 남은 시간 표시 -->
                                             <small class="remaining-time"></small>
@@ -211,9 +237,7 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row" style="margin-top: 20px">
             <div class="col">
                 <div style="display: flex; align-items: center">
                     <h1 class="text-start">

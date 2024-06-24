@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FootBallNewsRepository extends JpaRepository<FootballNews, Long> {
-    List<FootballNews> findTop22ByOrderByRegDtDesc();
+    List<FootballNews> findTop20ByOrderByRegDtDesc();
+
 }
