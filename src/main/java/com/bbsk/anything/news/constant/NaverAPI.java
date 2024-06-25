@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public enum NaverAPI {
-    CLIENT_ID("5xURvLyq3MTVDdRIktaF"),
-    CLIENT_SECRET("upwYviBtBJ"),
+    CLIENT_ID(""),
+    CLIENT_SECRET(""),
     URL("https://openapi.naver.com"),
     PATH ("/v1/search/news.json");
 
