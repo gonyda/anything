@@ -1,5 +1,6 @@
 package com.bbsk.anything.crawler.utils;
 
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 public enum ChromeOptionsHolder {
@@ -13,13 +14,15 @@ public enum ChromeOptionsHolder {
     }
 
     private static ChromeOptions create() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--lang=ko");
-        chromeOptions.addArguments("--no-sandbox");
-        chromeOptions.addArguments("--disable-dev-shm-usage");
-        chromeOptions.addArguments("--disable-gpu");
-        chromeOptions.addArguments("--headless");
-        return chromeOptions;
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("disable-infobars"); // 정보 표시줄 비활성화
+        options.addArguments("--disable-extensions"); // 확장 프로그램 비활성화
+        options.addArguments("--disable-gpu"); // GPU 비활성화
+        options.addArguments("--no-sandbox"); // 샌드박스 모드 비활성화
+        options.addArguments("--disable-dev-shm-usage"); // /dev/shm 사용 비활성화
+
+        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        return options;
     }
 
     public ChromeOptions get() {

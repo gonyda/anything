@@ -55,7 +55,7 @@ public class FmKoreaScheduler {
         List<FootballNews> newNewsList = toSaveList.stream()
                                                 .filter(news -> savedList.stream().noneMatch(savedNews -> savedNews.getLink().equals(news.getLink())))
                                                 .toList();
-        log.error("## new news list size(): {}", newNewsList.size());
+        log.info("## new news list size(): {}", newNewsList.size());
         fmKoreaService.addFootballNews(newNewsList);
         SeleniumUtils.close(chromeDriver);
         log.info("## football news INSERT END");

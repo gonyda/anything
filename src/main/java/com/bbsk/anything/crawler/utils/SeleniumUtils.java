@@ -44,6 +44,7 @@ public class SeleniumUtils {
 
     private static void setChromeDriver(String url, WebDriver chromeDriver) {
         chromeDriver.get(url);
-        chromeDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        chromeDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        chromeDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
     }
 }
