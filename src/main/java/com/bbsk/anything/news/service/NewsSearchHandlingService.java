@@ -27,8 +27,8 @@ public class NewsSearchHandlingService {
     }
 
     public ResponseSearchNewsDto handleNonEmptyKeyword(String keyword, User user) {
-        NewsKeyword findKeyword = newsKeywordRepository.findByKeyword(keyword);
         keyword = keyword.replaceAll("\\s+", "");
+        NewsKeyword findKeyword = newsKeywordRepository.findByKeyword(keyword);
         // 유저 keyword 세팅
         user.updateKeyword(
                 findKeyword == null ?

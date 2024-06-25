@@ -44,8 +44,8 @@ public class HomeService {
     public void getExchangeRate(Model model) {
         List<ExchangeRate> exchangeRateList = exchangeRateService.getExchangeRate();
         model.addAttribute("exchangeRate", exchangeRateList);
-        model.addAttribute("date", exchangeRateList.get(0).getDate());
-        model.addAttribute("time", extractHour(exchangeRateList.get(0).getTime()));
+        model.addAttribute("date", !exchangeRateList.isEmpty() ? exchangeRateList.get(0).getDate() : "");
+        model.addAttribute("time", !exchangeRateList.isEmpty() ? extractHour(exchangeRateList.get(0).getTime()) : "");
     }
 
     public void findTop5ByOrderBySearchCountDesc(Model model) {

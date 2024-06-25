@@ -23,6 +23,9 @@ public class InvestingService {
 
     private final InvestingPerformanceRepository investingPerformanceRepository;
 
+    /*
+    * 실적 조회
+    * */
     @Transactional
     public void getPerformance(String ticker) {
         InvestingPerformanceEnum company = InvestingPerformanceEnum.valueOf(ticker.toUpperCase());
