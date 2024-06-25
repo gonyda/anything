@@ -31,6 +31,12 @@ public class SeleniumUtils {
         return childElements;
     }
 
+    public static List<WebElement> getChildElementsByName(WebElement parentElement, String childName) {
+        List<WebElement> childElements = parentElement.findElements(By.name(childName));
+        Assert.notEmpty(childElements, "## childElements IS EMPTY");
+        return childElements;
+    }
+
     public static void close(WebDriver chromeDriver) {
         chromeDriver.close(); // 현재 창 닫기
         chromeDriver.quit(); // 전체 세션 종료
