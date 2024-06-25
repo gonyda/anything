@@ -10,7 +10,7 @@ public enum InvestingPerformanceFactoryEnum {
 
     ENTITY {
         @Override
-        public InvestingPerformance get(List<WebElement> webElements, String companyName) {
+        public InvestingPerformance get(List<WebElement> webElements, String companyName, String companyTicker) {
             int col = 1;
             InvestingPerformanceBuilder builder = InvestingPerformance.builder();
             for (WebElement webElement : webElements) {
@@ -30,10 +30,11 @@ public enum InvestingPerformanceFactoryEnum {
                 }
                 col++;
             }
-            builder.company(companyName);
-            return builder.build();
+            return builder.company(companyName)
+                          .ticker(companyTicker)
+                          .build();
         }
     };
 
-    public abstract InvestingPerformance get(List<WebElement> webElements, String name);
+    public abstract InvestingPerformance get(List<WebElement> webElements, String name, String companyTicker);
 }

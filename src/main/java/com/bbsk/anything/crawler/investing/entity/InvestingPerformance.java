@@ -19,6 +19,9 @@ public class InvestingPerformance {
     private String company;
 
     @Column(nullable = false)
+    private String ticker;
+
+    @Column(nullable = false)
     private String relDate; // 실적 발표일
 
     @Column(nullable = false)

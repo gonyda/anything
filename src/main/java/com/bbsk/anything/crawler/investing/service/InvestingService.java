@@ -28,7 +28,7 @@ public class InvestingService {
     * */
     @Transactional
     public void getPerformance(String ticker) {
-        InvestingPerformanceEnum company = InvestingPerformanceEnum.valueOf(ticker.toUpperCase());
+        InvestingPerformanceEnum company = InvestingPerformanceEnum.getByTicker(ticker.toUpperCase());
 
         WebDriver chromeDriver = SeleniumUtils.getChromeDriver();
         WebElement parentElement = SeleniumUtils.getParentElement(company.getUrl(), company.getFirstClassName(), chromeDriver);
@@ -49,7 +49,7 @@ public class InvestingService {
         List<InvestingPerformance> dataList = new ArrayList<>();
         for (WebElement childElement : childElements) {
             dataList.add(
-                    InvestingPerformanceFactoryEnum.ENTITY.get(childElement.findElements(By.tagName("td")), company.getName())
+                    InvestingPerformanceFactoryEnum.ENTITY.get(childElement.findElements(By.tagName("td")), company.getName(), company.getTicker())
             );
         }
         // 역순 정렬
