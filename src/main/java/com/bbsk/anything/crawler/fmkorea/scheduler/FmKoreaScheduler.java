@@ -2,9 +2,11 @@ package com.bbsk.anything.crawler.fmkorea.scheduler;
 
 import com.bbsk.anything.crawler.fmkorea.entity.FootballNews;
 import com.bbsk.anything.crawler.fmkorea.service.FmKoreaService;
+import com.bbsk.anything.crawler.utils.SeleniumUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,10 +28,11 @@ public class FmKoreaScheduler {
     @Scheduled(cron = "0 */10 * * * ?")
     public void getFmKoreaByFootballNews() {
         log.info("## football news INSERT START");
+        WebDriver chromeDriver = SeleniumUtils.getChromeDriver();
 
         // 크롤링 뉴스 리스트
         List<FootballNews> toSaveList = new ArrayList<>();
-        for (WebElement e : fmKoreaService.getFmKoreaFootballNews()) {
+        for (WebElement e : fmKoreaService.getFmKoreaFootballNews(chromeDriver)) {
             List<WebElement> webElements = e.findElements(By.tagName("a"));
             for (WebElement ee : webElements) {
                 if (!ee.getAttribute("href").contains("/818271708") && !ee.getAttribute("href").contains("/1102273356")) {
@@ -54,7 +57,7 @@ public class FmKoreaScheduler {
                                                 .toList();
         log.error("## new news list size(): {}", newNewsList.size());
         fmKoreaService.addFootballNews(newNewsList);
-
+        SeleniumUtils.close(chromeDriver);
         log.info("## football news INSERT END");
     }
 

@@ -22,8 +22,7 @@ public class FmKoreaService {
     private static final String FIRST_CLASSNAME = "bd_lst";
     private static final String SECOND_CLASSNAME = "title";
 
-    public List<WebElement> getFmKoreaFootballNews(){
-        WebDriver chromeDriver = SeleniumUtils.getChromeDriver();
+    public List<WebElement> getFmKoreaFootballNews(WebDriver chromeDriver){
         WebElement parentElement = SeleniumUtils.getParentElement(URL, FIRST_CLASSNAME, chromeDriver);
         return SeleniumUtils.getChildElements(parentElement, SECOND_CLASSNAME);
     }
