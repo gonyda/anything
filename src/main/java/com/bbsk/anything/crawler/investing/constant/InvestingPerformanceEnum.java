@@ -7,7 +7,7 @@ import lombok.*;
 public enum InvestingPerformanceEnum {
 
     AAPL("https://investing.com/equities/apple-computer-inc-earnings", "earningsPageTbl", "instrumentEarningsHistory", "apple"),
-    AMZN("https://kr.investing.com/equities/amazon-com-inc-earnings", "earningsPageTbl", "instrumentEarningsHistory", "amazon");
+    AMZN("https://investing.com/equities/amazon-com-inc-earnings", "earningsPageTbl", "instrumentEarningsHistory", "amazon");
 
     private final String url;
     private final String firstClassName;

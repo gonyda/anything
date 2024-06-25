@@ -4,5 +4,5 @@ import com.bbsk.anything.crawler.investing.entity.InvestingPerformance;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InvestingPerformanceRepository extends JpaRepository<InvestingPerformance, Long> {
-    InvestingPerformance findByCompanyAndRelDate(String company, String relDate);
+    InvestingPerformance findByCompanyAndPeriodEnd(String company, String relDate);
 }
