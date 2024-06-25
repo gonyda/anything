@@ -1,8 +1,12 @@
 package com.bbsk.anything.news.entity;
 
+import com.bbsk.anything.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +22,9 @@ public class NewsKeyword {
 
     @Column(nullable = false)
     private Long searchCount;
+
+    @OneToMany(mappedBy = "newsKeyword", fetch = FetchType.LAZY)
+    private final List<User> userList = new ArrayList<>();
 
     /**
      * 처음으로 검색된 키워드

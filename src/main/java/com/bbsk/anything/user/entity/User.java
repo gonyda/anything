@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Id
     private String userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keywordId")
     @ToString.Exclude
     private NewsKeyword newsKeyword;
