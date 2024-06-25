@@ -11,4 +11,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+
+    <!-- nav js -->
+    <th:block th:replace="~{/fragments/js/nav-script :: fragment-nav-script}"></th:block>
+    <!-- news js -->
+    <th:block th:replace="~{/fragments/js/news-script :: fragment-news-script}"></th:block>
+    <!-- schedule js -->
+    <th:block th:replace="~{/fragments/js/schedule-script :: fragment-schedule-script}"></th:block>
+    <!-- javis js -->
+    <th:block th:replace="~{/fragments/js/javis-script :: fragment-javis-script}"></th:block>
 </head>
