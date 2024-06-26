@@ -23,11 +23,11 @@
         .bi-trash:hover {
             cursor: pointer;
         }
+        .highlight-red {
+            color: crimson;
+            font-weight: bolder;
+        }
     </style>
-
-    <script th:inline="javascript">
-    </script>
-
 </head>
 <body>
     <!-- nav -->
@@ -187,6 +187,22 @@
                     <!------------------------------------------ 해외축구 뉴스 end ------------------------------------------>
                 </div>
             </div>
+            <!-- 해외축구 뉴스 특정 키워드 강조 스크립트 -->
+            <script>
+                $(document).ready(function () {
+                    var keywords = ["맨유", "맨체스터유나이티드", "맨체스터 유나이티드"];
+                    $("#footballNewsList .list-group-item h5").each(function () {
+                        var html = $(this).html();
+                        keywords.forEach(function (keyword) {
+                            var regex = new RegExp(keyword, "gi");
+                            html = html.replace(regex, function (match) {
+                                return '<span class="highlight-red">' + match + '</span>';
+                            });
+                        });
+                        $(this).html(html);
+                    });
+                });
+            </script>
         </div>
 
         <div class="row" style="margin-top: 20px">
