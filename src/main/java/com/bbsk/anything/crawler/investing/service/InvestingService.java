@@ -27,7 +27,13 @@ public class InvestingService {
     * 실적 조회
     * */
     @Transactional
-    public void getPerformance(String ticker) {
+    public List<InvestingPerformance> getPerformance(String ticker) {
+        List<InvestingPerformance> existPerformanceList = investingPerformanceRepository.findTop8ByTickerOrderByIdDesc(ticker.toUpperCase());
+        // 해당 기업의 실적데이터가 DB에 존재 한다면 리턴
+        if(!existPerformanceList.isEmpty()) {
+            return existPerformanceList;
+        }
+
         InvestingPerformanceEnum company = InvestingPerformanceEnum.getByTicker(ticker.toUpperCase());
 
         WebDriver chromeDriver = SeleniumUtils.getChromeDriver();
@@ -43,6 +49,8 @@ public class InvestingService {
         saveOrUpdate(dataList);
 
         SeleniumUtils.close(chromeDriver);
+
+        return dataList;
     }
 
     private List<InvestingPerformance> getDataList(List<WebElement> childElements, InvestingPerformanceEnum company) {
