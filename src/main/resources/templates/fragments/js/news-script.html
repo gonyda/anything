@@ -67,9 +67,16 @@
                     */
                     success: function (res) { // 결과 성공 콜백함수
                         var prevNews = []
-                        $.each($('#newsList .newsTitle'), function (i, e) {
-                            prevNews.push($(e).text());
-                        })
+                        $.each($('.news-content'), function (i, e) {
+                            var newsTitle = $(e).find('.newsTitle').text();
+                            var newsLink = $(e).attr('href');
+                            prevNews.push(
+                                {
+                                    newsTitle : newsTitle,
+                                    newsLink : newsLink
+                                }
+                            );
+                        });
 
                         // 뉴스리스트 지우기
                         $('#newsList').empty();
@@ -77,7 +84,7 @@
                         // 새로운 news list
                         $.each(res.news.items, function (index, e) {
                             var newsItemHtml = `
-                                <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                                <a href="${e.link}" target="_blank" class="list-group-item list-group-item-action news-content" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1 newsTitle">${e.title}</h5>
                                         <small class="newsDate">${formatISODateToCustomFormat(e.pubDate.substring(0, 16))}</small>
@@ -93,13 +100,26 @@
                         titleLength();
 
                         var newNews = []
-                        $.each($('#newsList .newsTitle'), function (i, e) {
-                            newNews.push($(e).text());
-                        })
+                        $.each($('.news-content'), function (i, e) {
+                            var newsTitle = $(e).find('.newsTitle').text();
+                            var newsLink = $(e).attr('href');
+                            newNews.push(
+                                {
+                                    newsTitle : newsTitle,
+                                    newsLink : newsLink
+                                }
+                            );
+                        });
 
                         // 새로운 뉴스 알림 보내기
                         if(isScheduling) {
-                            sendAlmNewNews(prevNews, newNews, res)
+                            // 새로운 뉴스 중 기존 뉴스에 없는 뉴스만 필터링
+                            var diffNews = newNews.filter(function (newItem) {
+                                return !prevNews.some(function (prevItem) {
+                                    return prevItem.newsLink === newItem.newsLink;
+                                });
+                            });
+                            sendAlmNewNews(diffNews)
                         }
                     },
                     error: function (request, status, error) { // 결과 에러 콜백함수
@@ -108,30 +128,22 @@
                 });
             }
 
-            function sendAlmNewNews(prevNews, newNews, res) {
-                // 새로운 뉴스 알림 보내기
-                var diffNews = newNews.filter(function (newsTitle) {
-                    return !prevNews.includes(newsTitle);
-                });
-
+            function sendAlmNewNews(diffNews) {
                 if (diffNews.length > 0) {
                     // 사용자 권한 요청
                     Notification.requestPermission().then(permission => {
                         if (permission === "granted") {
-                            diffNews.forEach(function (newsTitle, index) {
+                            diffNews.forEach(function (newsItem, index) {
                                 setTimeout(() => {
-                                    // 해당 뉴스의 링크 찾기
-                                    var newsLink = res.news.items.find(item => item.title === newsTitle).link;
-
                                     // 푸시 알림 생성
                                     var notification = new Notification("새로운 뉴스", {
-                                        body: newsTitle,
+                                        body: newsItem.newsTitle,
                                         requireInteraction: true // 사용자가 상호작용할 때까지 알림 유지
                                     });
 
                                     // 알림 클릭 시 뉴스 링크로 이동
                                     notification.onclick = function () {
-                                        window.open(newsLink, '_blank');
+                                        window.open(newsItem.newsLink, '_blank');
                                     };
                                 }, index * 1000); // 각 알림 사이에 1초 지연
                             });
