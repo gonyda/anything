@@ -12,8 +12,8 @@
                 <div>
                     <!-- 환율 정보를 출력하는 부분 -->
                     <th:block th:each="e, iterStat : ${exchangeRate}">
-                        <span id="exchangeRate-wrap" style="display:inline-block; width:150px">
-                            <span style="font-weight:bold" th:text="${e.name}">환율종류</span>
+                        <span id="exchangeRate-wrap">
+                            <span th:text="${e.name}">환율종류</span>
                             <span style="font-weight:bold" th:text="|${e.basePrice}원|">환율</span>
                         </span>
                     </th:block>
