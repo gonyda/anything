@@ -4,8 +4,9 @@ import com.bbsk.anything.crawler.investing.constant.InvestingPerformanceEnum;
 import com.bbsk.anything.crawler.investing.constant.InvestingPerformanceFactoryEnum;
 import com.bbsk.anything.crawler.investing.entity.InvestingPerformance;
 import com.bbsk.anything.crawler.investing.repository.InvestingPerformanceRepository;
+import com.bbsk.anything.crawler.investing.service.InvestingService.InvestingPerformanceResponseDto.InvestingPerformanceResponseDtoBuilder;
 import com.bbsk.anything.crawler.utils.SeleniumUtils;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,8 +27,27 @@ public class InvestingService {
     /*
     * DB에 저장되어있는 실적 데이터 조회
     * */
-    public List<InvestingPerformance> getPerformance() {
-        return investingPerformanceRepository.getTop8PerformanceGroupByTicker();
+    public List<InvestingPerformanceResponseDto> getPerformance() {
+        List<InvestingPerformance> top8PerformanceGroupByTicker = investingPerformanceRepository.getTop8PerformanceGroupByTicker();
+        List<String> tickerList = top8PerformanceGroupByTicker.stream()
+                .map(InvestingPerformance::getTicker)
+                .distinct()
+                .toList();
+
+        List<InvestingPerformanceResponseDto> responseDtoList = new ArrayList<>();
+
+        tickerList.forEach(ticker -> {
+            InvestingPerformanceResponseDtoBuilder builder = InvestingPerformanceResponseDto.builder();
+            builder.company(InvestingPerformanceEnum.getByTicker(ticker).getName().toUpperCase());
+            builder.performanceList(top8PerformanceGroupByTicker.stream()
+                    .filter(performance -> {
+                        return ticker.equals(performance.getTicker());
+                    })
+                    .toList());
+            responseDtoList.add(builder.build());
+        });
+
+        return responseDtoList;
     }
 
     /*
@@ -75,5 +95,15 @@ public class InvestingService {
                 findEntity.updateValue(entity);
             }
         });
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @ToString
+    public static class InvestingPerformanceResponseDto {
+        private String company;
+        private List<InvestingPerformance> performanceList = new ArrayList<>();
     }
 }

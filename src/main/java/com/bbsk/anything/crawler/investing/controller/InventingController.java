@@ -31,7 +31,7 @@ public class InventingController {
     * DB에 저장되어 있는 실적 데이터 조회
     * */
     @GetMapping("/performance")
-    public ResponseEntity<List<InvestingPerformance>> getPerformance() {
+    public ResponseEntity<List<InvestingService.InvestingPerformanceResponseDto>> getPerformance() {
         return ResponseEntity.status(HttpStatus.OK).body(investingService.getPerformance());
     }
 }

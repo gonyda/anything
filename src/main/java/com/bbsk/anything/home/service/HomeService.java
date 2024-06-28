@@ -2,6 +2,7 @@ package com.bbsk.anything.home.service;
 
 import com.bbsk.anything.crawler.fmkorea.entity.FootballNews;
 import com.bbsk.anything.crawler.fmkorea.service.FmKoreaService;
+import com.bbsk.anything.crawler.investing.service.InvestingService;
 import com.bbsk.anything.exchangeRate.entity.ExchangeRate;
 import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.javis.service.JavisService;
@@ -25,6 +26,7 @@ public class HomeService {
     private final JavisService javisService;
     private final ExchangeRateService exchangeRateService;
     private final FmKoreaService fmKoreaService;
+    private final InvestingService investingService;
 
     public void getChat(User user, Model model) {
         model.addAttribute("chat", javisService.findAllByUser(user.getUserId()));
@@ -61,5 +63,9 @@ public class HomeService {
             throw new IllegalArgumentException("Invalid time format");
         }
         return time.substring(0, 5);
+    }
+
+    public void getPerformance(Model model) {
+        model.addAttribute("performanceList", investingService.getPerformance());
     }
 }

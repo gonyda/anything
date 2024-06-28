@@ -49,6 +49,8 @@ public class HomeController {
         }
         // 한율 조회
         homeService.getExchangeRate(model);
+        // 기업 실적
+        homeService.getPerformance(model);
 
         return "home/home";
     }
