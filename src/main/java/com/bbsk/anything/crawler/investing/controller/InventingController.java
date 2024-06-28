@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +18,20 @@ public class InventingController {
 
     private final InvestingService investingService;
 
-    @GetMapping("/performance/{ticker}")
-    public ResponseEntity<List<InvestingPerformance>> getPerformance(@PathVariable String ticker) {
+    /*
+    * 기존 저장되어있는 실적 데이터 업데이트
+    * */
+    @PutMapping("/performance/{ticker}")
+    public ResponseEntity<List<InvestingPerformance>> modifyPerformance(@PathVariable String ticker) {
         log.info("## ticker: {}", ticker);
-        return ResponseEntity.status(HttpStatus.OK).body(investingService.getPerformance(ticker));
+        return ResponseEntity.status(HttpStatus.OK).body(investingService.modifyPerformance(ticker));
+    }
+
+    /*
+    * DB에 저장되어 있는 실적 데이터 조회
+    * */
+    @GetMapping("/performance")
+    public ResponseEntity<List<InvestingPerformance>> getPerformance() {
+        return ResponseEntity.status(HttpStatus.OK).body(investingService.getPerformance());
     }
 }

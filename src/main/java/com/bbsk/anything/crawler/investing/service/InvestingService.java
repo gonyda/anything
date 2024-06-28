@@ -24,16 +24,17 @@ public class InvestingService {
     private final InvestingPerformanceRepository investingPerformanceRepository;
 
     /*
-    * 실적 조회
+    * DB에 저장되어있는 실적 데이터 조회
+    * */
+    public List<InvestingPerformance> getPerformance() {
+        return investingPerformanceRepository.getTop8PerformanceGroupByTicker();
+    }
+
+    /*
+    * 실적 데이터 업데이트
     * */
     @Transactional
-    public List<InvestingPerformance> getPerformance(String ticker) {
-        List<InvestingPerformance> existPerformanceList = investingPerformanceRepository.findTop8ByTickerOrderByIdDesc(ticker.toUpperCase());
-        // 해당 기업의 실적데이터가 DB에 존재 한다면 리턴
-        if(!existPerformanceList.isEmpty()) {
-            return existPerformanceList;
-        }
-
+    public List<InvestingPerformance> modifyPerformance(String ticker) {
         InvestingPerformanceEnum company = InvestingPerformanceEnum.getByTicker(ticker.toUpperCase());
 
         WebDriver chromeDriver = SeleniumUtils.getChromeDriver();
