@@ -10,7 +10,8 @@ import java.util.Arrays;
 public enum InvestingPerformanceEnum {
 
     AAPL("https://investing.com/equities/apple-computer-inc-earnings", "earningsPageTbl", "instrumentEarningsHistory", "apple", "AAPL"),
-    AMZN("https://investing.com/equities/amazon-com-inc-earnings", "earningsPageTbl", "instrumentEarningsHistory", "amazon", "AMZN");
+    AMZN("https://investing.com/equities/amazon-com-inc-earnings", "earningsPageTbl", "instrumentEarningsHistory", "amazon", "AMZN"),
+    MSFT("https://www.investing.com/equities/microsoft-corp-earnings", "earningsPageTbl", "instrumentEarningsHistory", "micro soft", "MSFT");
 
     private final String url;
     private final String firstClassName;

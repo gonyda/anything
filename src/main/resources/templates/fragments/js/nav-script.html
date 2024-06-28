@@ -44,17 +44,17 @@
 
             console.log("## isMarketOpen : " + isMarketOpen())
 
-            // 주식 가격을 가져오는 함수
             const fetchStockPrice = (ticker) => {
-                console.log("## update stock")
+                console.log("## update stock");
                 const url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${apiToken}`;
                 $.get(url, (data) => {
                     const { c: currentPrice, pc: previousClose } = data;
                     if (currentPrice > 0) {
-                        const priceChangePercent = (((currentPrice - previousClose) / previousClose) * 100).toFixed(2);
+                        const roundedCurrentPrice = currentPrice.toFixed(1);
+                        const priceChangePercent = (((currentPrice - previousClose) / previousClose) * 100).toFixed(1);
                         const changeText = (priceChangePercent > 0 ? '+' : '') + priceChangePercent + '%';
-                        localStorage.setItem(ticker, JSON.stringify({ price: currentPrice, previousClose }));
-                        updateStockDisplay(ticker, currentPrice, changeText);
+                        localStorage.setItem(ticker, JSON.stringify({ price: roundedCurrentPrice, previousClose }));
+                        updateStockDisplay(ticker, roundedCurrentPrice, changeText);
                     } else {
                         alert('잘못 된 Ticker 입니다.');
                     }
@@ -78,13 +78,15 @@
                     stockWrap.hover(
                         function() {
                             $(this).find('.ticker').text('Delete?').css('color', 'red');
-                            $(this).find('.price, .change').empty();
+                            $(this).find('.price, .change').hide();
                             $(this).css('width', width);
                         },
                         function() {
                             $(this).find('.ticker').text(`${ticker}:`).css('color', '');
-                            $(this).find('.price').text(price);
+                            $(this).find('.price').text(JSON.parse(localStorage.getItem(ticker)).price);
                             $(this).find('.change').text(`(${changeText})`);
+                            $(this).find('.price, .change').show();
+                            $(this).css('width', '');
                         }
                     );
 

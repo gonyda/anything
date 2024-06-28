@@ -155,7 +155,8 @@
                         <span class="badge bg-dark">해외축구 뉴스</span>
                     </h1>
                 </div>
-                <div class="overflow-auto" style="max-height: 75vh; margin-top: 53px">
+                <div id="football-news-keyword" style="text-align:left; font-size:25px; color:gray;">test</div>
+                <div class="overflow-auto" style="max-height: 75vh; margin-top: 18px">
                     <!------------------------------------------ 해외축구 뉴스 start ------------------------------------------>
                     <div class="list-group" id="footballNewsList">
                         <!-- 비로그인 -->
@@ -191,6 +192,12 @@
             <script>
                 $(document).ready(function () {
                     var keywords = ["맨유", "맨체스터유나이티드", "맨체스터 유나이티드"];
+
+                    // 키워드 화면에 출력
+                    var formattedKeywords = keywords.map(keyword => '#' + keyword).join(' ');
+                    $('#football-news-keyword').text(formattedKeywords);
+
+                    // 키워드가 포함되어 있으면 빨간 글씨로 포인트
                     $("#footballNewsList .list-group-item h5").each(function () {
                         var html = $(this).html();
                         keywords.forEach(function (keyword) {
