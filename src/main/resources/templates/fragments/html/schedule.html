@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<header></header>
+
+<body>
+<th:block th:fragment="fragment-schedule">
+    <div class="col">
+        <h1 class="text-start"><span class="badge bg-dark">일정</span></h1>
+        <div class="input-group mb-3">
+            <span class="input-group-text">내용</span>
+            <input type="text" class="form-control" id="schedule-content">
+            <span class="input-group-text">시간</span>
+            <input type="datetime-local" class="form-control" aria-label="Server" id="schedule-date">
+            <button class="btn btn-dark" type="button" id="btn-schedule-register">등록</button>
+        </div>
+        <div class="overflow-auto" style="max-height: 38vh">
+            <div class="list-group" id="scheduleList">
+                <!-- 비로그인 -->
+                <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
+                    <a class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">로그인 이후에 이용하실 수 있습니다.</h5>
+                            <small></small>
+                        </div>
+                        <p class="mb-1 text-start"></p>
+                    </a>
+                </th:block>
+
+                <!-- 로그인 -->
+                <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                    <th:block th:if="${scheduleList != null}">
+                        <th:block th:each="e: ${scheduleList}">
+                            <div class="list-group-item list-group-item-action schedule-list" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1" th:text="${#temporals.format(e.date, 'yyyy-MM-dd HH:mm')} + ' ' + ${e.dayOfWeek}">2023-01-05 23:40 화요일</h5>
+                                    <i class="bi bi-trash btn-delete-schedule" style="margin-right: auto; margin-left: 10px; font-size: 18px;"
+                                       th:id="${e.scheduleId}">
+                                    </i>
+                                    <!-- 일정 남은 시간 표시 -->
+                                    <small class="remaining-time"></small>
+                                </div>
+                                <p class="mb-1 text-start" th:text="${e.content}">점심약속</p>
+                            </div>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${scheduleList == null}">
+                        <a class="list-group-item list-group-item-action" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">현재 등록 된 일정이 없습니다.</h5>
+                                <small></small>
+                            </div>
+                            <p class="mb-1 text-start"></p>
+                        </a>
+                    </th:block>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+
+</html>

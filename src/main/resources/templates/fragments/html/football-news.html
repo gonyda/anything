@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<header></header>
+
+<body>
+<th:block th:fragment="fragment-football-news">
+    <div class="col">
+        <div style="display: flex; align-items: center">
+            <h1 class="text-start">
+                <span class="badge bg-dark">해외축구 뉴스</span>
+            </h1>
+        </div>
+        <div id="football-news-keyword" style="text-align:left; font-size:25px; color:gray;">test</div>
+        <div class="overflow-auto" style="max-height: 75vh; margin-top: 18px">
+            <!------------------------------------------ 해외축구 뉴스 start ------------------------------------------>
+            <div class="list-group" id="footballNewsList">
+                <!-- 비로그인 -->
+                <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">
+                                로그인 이후에 이용하실 수 있습니다.
+                            </h5>
+                            <small></small>
+                        </div>
+                        <p class="mb-1 text-start"></p>
+                    </a>
+                </th:block>
+
+                <!-- 로그인 -->
+                <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                    <th:block th:each="e : ${footballNewsList}">
+                        <a th:href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${e.title}">
+                                    뉴스 제목
+                                </h5>
+                            </div>
+                        </a>
+                    </th:block>
+                </th:block>
+            </div>
+            <!------------------------------------------ 해외축구 뉴스 end ------------------------------------------>
+        </div>
+    </div>
+    <!-- 해외축구 뉴스 특정 키워드 강조 스크립트 -->
+    <script>
+        $(document).ready(function () {
+            var keywords = ["맨유", "맨체스터유나이티드", "맨체스터 유나이티드"];
+
+            // 키워드 화면에 출력
+            var formattedKeywords = keywords.map(keyword => '#' + keyword).join(' ');
+            $('#football-news-keyword').text(formattedKeywords);
+
+            // 키워드가 포함되어 있으면 빨간 글씨로 포인트
+            $("#footballNewsList .list-group-item h5").each(function () {
+                var html = $(this).html();
+                keywords.forEach(function (keyword) {
+                    var regex = new RegExp(keyword, "gi");
+                    html = html.replace(regex, function (match) {
+                        return '<span class="highlight-red">' + match + '</span>';
+                    });
+                });
+                $(this).html(html);
+            });
+        });
+    </script>
+</th:block>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<header></header>
+
+<body>
+<th:block th:fragment="fragment-javis">
+    <button class="btn btn-dark fixed-left-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+        <span>
+            Javis <span style="color: darkgrey"><i class="bi bi-command fs-6"></i> + J</span>
+        </span>
+    </button>
+
+    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel"
+         style="width: 100%">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel"></h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="overflow-auto" id="wrap-javis" style="max-height: 90%; height: 90%">
+                <ul class="navbar-nav" id="chat-list">
+                    <th:block th:if="${chat != null}">
+                        <li class="nav-item message-item" th:each="e: ${chat}">
+                            <p>
+                                <th:block th:if="${e.sender == 'user'}">
+                                    <span class="badge text-bg-light" style="font-size: 20px">User</span>
+                                    <span style="color: darkgray" th:text="${e.createTime}">2023-12-12 12:12</span>
+                                </th:block>
+                                <th:block th:if="${e.sender == 'assistant'}">
+                                    <span class="badge text-bg-success" style="font-size: 20px">Javis</span>
+                                    <span style="color: darkgray" th:text="|${e.model} Tokens ${e.totalTokens} / ${e.maxTokens}|">Tokens 123 / 13432</span>
+                                </th:block>
+                            </p>
+                            <span class="chat-item" th:utext="${e.message}">채팅 내용</span>
+                        </li>
+                    </th:block>
+
+                </ul>
+            </div>
+
+            <div class="form-floating">
+                <textarea class="form-control" style="height: 80px; width: 98%" id="javisInput"></textarea>
+                <!--<button class="btn btn-success" type="button" id="btn-javis-chat">Submit</button>-->
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+
+</html>

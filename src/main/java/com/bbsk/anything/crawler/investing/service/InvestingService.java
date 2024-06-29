@@ -51,6 +51,13 @@ public class InvestingService {
     }
 
     /*
+    * TODO
+    *  1. https://www.investing.com/stock-screener/?sp=country::5|sector::a|industry::a|equityType::a|exchange::a%3Ceq_market_cap;1
+    *     해당 사이트에서 시총순으로 리스트 업데이트 (스케줄러 하루에 한번)
+    *  2. 받아 온 리스트를 셀렉박스로 화면에 출력, 추가 버튼을 통해 실적데이터 조회
+    *  3. 추가버튼 실행 시 애니띵 DB에 정보 INSERT(화면 출력 가능)
+    * */
+    /*
     * 실적 데이터 업데이트
     * */
     @Transactional
