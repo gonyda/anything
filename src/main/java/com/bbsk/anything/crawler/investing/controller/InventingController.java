@@ -21,7 +21,7 @@ public class InventingController {
     /*
     * 기존 저장되어있는 실적 데이터 업데이트
     * */
-    @PutMapping("/performance/{ticker}")
+    @PostMapping("/performance/{ticker}")
     public ResponseEntity<List<InvestingPerformance>> modifyPerformance(@PathVariable String ticker) {
         log.info("## ticker: {}", ticker);
         return ResponseEntity.status(HttpStatus.OK).body(investingService.modifyPerformance(ticker));
@@ -30,7 +30,7 @@ public class InventingController {
     /*
     * DB에 저장되어 있는 실적 데이터 조회
     * */
-    @GetMapping("/performance")
+    @GetMapping("/performances")
     public ResponseEntity<List<InvestingService.InvestingPerformanceResponseDto>> getPerformance() {
         return ResponseEntity.status(HttpStatus.OK).body(investingService.getPerformance());
     }
