@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum ChatGptApi {
     URI("https://api.openai.com/v1/chat/completions"),
-    AUTHORIZATION("Bearer ");
+    AUTHORIZATION;
 
     private String value;
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

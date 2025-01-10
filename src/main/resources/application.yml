@@ -30,6 +30,8 @@ spring:
     # Auto Restart
     restart:
       enabled: true
+  config:
+    import: env.yml
 
 # Logging 설정
 logging.level:
