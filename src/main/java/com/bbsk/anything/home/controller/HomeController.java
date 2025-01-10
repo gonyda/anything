@@ -1,12 +1,7 @@
 package com.bbsk.anything.home.controller;
 
-import com.bbsk.anything.exchangeRate.entity.ExchangeRate;
-import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
+import com.bbsk.anything.crawler.yahoo.service.YahooFinService;
 import com.bbsk.anything.home.service.HomeService;
-import com.bbsk.anything.javis.service.JavisService;
-import com.bbsk.anything.news.service.NewsService;
-import com.bbsk.anything.news.service.NewsService.ResponseSearchNewsDto;
-import com.bbsk.anything.schedule.service.ScheduleService;
 import com.bbsk.anything.user.dto.RequestUserDto;
 import com.bbsk.anything.user.entity.User;
 import com.bbsk.anything.user.service.UserService;
@@ -29,6 +24,8 @@ public class HomeController {
 
     private final HomeService homeService;
     private final UserService userService;
+
+    private final YahooFinService yahooFinService;
 
 
     @GetMapping("/")
@@ -75,5 +72,11 @@ public class HomeController {
         userService.save(user);
 
         return "redirect:/login";
+    }
+
+    @GetMapping("/testApi")
+    public String testApi(Model model) {
+        yahooFinService.getPerformanceFromYahoo();
+        return "home/home";
     }
 }
