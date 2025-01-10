@@ -56,6 +56,9 @@
                         localStorage.setItem(ticker, JSON.stringify({ price: roundedCurrentPrice, previousClose }));
                         updateStockDisplay(ticker, roundedCurrentPrice, changeText);
                     } else {
+                        tickers = tickers.filter(t => t !== ticker);
+                        saveTickers(tickers);
+                        localStorage.removeItem(ticker);
                         alert('잘못 된 Ticker 입니다.');
                     }
                 }).fail((error) => console.error('Error:', error));
