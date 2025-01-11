@@ -1,4 +1,4 @@
-package com.bbsk.anything.news.entity;
+package com.bbsk.anything.naver.news.entity;
 
 import com.bbsk.anything.user.entity.User;
 import jakarta.persistence.*;
@@ -28,6 +28,7 @@ public class NewsKeyword {
 
     /**
      * 처음으로 검색된 키워드
+     *
      * @param keyword
      * @return
      */
@@ -40,6 +41,7 @@ public class NewsKeyword {
     /**
      * 기존에 존재하는 키워드
      * 카운트 + 1
+     *
      * @return
      */
     public NewsKeyword updateSearchCount() {

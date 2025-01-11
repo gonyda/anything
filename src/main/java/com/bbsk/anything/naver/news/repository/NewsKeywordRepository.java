@@ -1,6 +1,6 @@
-package com.bbsk.anything.news.repository;
+package com.bbsk.anything.naver.news.repository;
 
-import com.bbsk.anything.news.entity.NewsKeyword;
+import com.bbsk.anything.naver.news.entity.NewsKeyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

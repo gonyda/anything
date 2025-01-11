@@ -1,7 +1,7 @@
-package com.bbsk.anything.news.service;
+package com.bbsk.anything.naver.news.service;
 
-import com.bbsk.anything.news.entity.NewsKeyword;
-import com.bbsk.anything.news.repository.NewsKeywordRepository;
+import com.bbsk.anything.naver.news.entity.NewsKeyword;
+import com.bbsk.anything.naver.news.repository.NewsKeywordRepository;
 import com.bbsk.anything.user.entity.User;
 import com.bbsk.anything.user.repository.UserRepository;
 import lombok.*;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.bbsk.anything.news.service.NaverNewsApiService.*;
+import static com.bbsk.anything.naver.news.service.NaverNewsApiService.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class NewsService {
 
     /**
      * 네이버 뉴스 검색
+     *
      * @param keyword
      * @param userId
      * @return

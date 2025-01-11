@@ -1,4 +1,4 @@
-package com.bbsk.anything.news.constant;
+package com.bbsk.anything.naver.news.constant;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.bbsk.anything.user.entity;
 
 import com.bbsk.anything.javis.entity.Javis;
-import com.bbsk.anything.news.entity.NewsKeyword;
+import com.bbsk.anything.naver.news.entity.NewsKeyword;
 import com.bbsk.anything.schedule.entity.Schedule;
 import com.bbsk.anything.security.serivce.Sha512CustomPasswordEncoder;
 import com.bbsk.anything.user.dto.RequestUserDto;
@@ -58,8 +58,8 @@ public class User implements UserDetails {
     }
 
     /*
-    * security
-    * */
+     * security
+     * */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

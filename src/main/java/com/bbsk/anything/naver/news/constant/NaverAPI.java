@@ -1,4 +1,4 @@
-package com.bbsk.anything.news.constant;
+package com.bbsk.anything.naver.news.constant;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ public enum NaverAPI {
     CLIENT_ID,
     CLIENT_SECRET,
     URL("https://openapi.naver.com"),
-    PATH ("/v1/search/news.json");
+    PATH("/v1/search/news.json");
 
     private String value;
 

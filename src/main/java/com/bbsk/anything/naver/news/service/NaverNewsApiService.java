@@ -1,6 +1,6 @@
-package com.bbsk.anything.news.service;
+package com.bbsk.anything.naver.news.service;
 
-import com.bbsk.anything.news.constant.NaverAPI;
+import com.bbsk.anything.naver.news.constant.NaverAPI;
 import com.bbsk.anything.utils.ObjectMapperHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
@@ -24,6 +24,7 @@ public class NaverNewsApiService {
 
     /**
      * 네이버 뉴스 가져오기
+     *
      * @param keyword
      * @return
      */
@@ -38,6 +39,7 @@ public class NaverNewsApiService {
 
     /**
      * 네이버 뉴스 API 호출
+     *
      * @param keyword
      * @return
      */
@@ -45,7 +47,7 @@ public class NaverNewsApiService {
         ByteBuffer buffer = StandardCharsets.UTF_8.encode(keyword);
         String query = StandardCharsets.UTF_8.decode(buffer).toString();
 
-        URI uri = UriComponentsBuilder.fromUriString (NaverAPI.URL.getValue())
+        URI uri = UriComponentsBuilder.fromUriString(NaverAPI.URL.getValue())
                 .path(NaverAPI.PATH.getValue())
                 .queryParam("query", query)
                 .queryParam("sort", "date")

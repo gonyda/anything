@@ -1,6 +1,5 @@
 package com.bbsk.anything.javis.constant;
 
-import com.bbsk.anything.news.constant.NaverAPI;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

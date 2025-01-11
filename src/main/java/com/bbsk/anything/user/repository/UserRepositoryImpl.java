@@ -5,12 +5,9 @@ import com.bbsk.anything.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-import java.util.List;
+import static com.bbsk.anything.naver.news.entity.QNewsKeyword.newsKeyword;
 
-import static com.bbsk.anything.news.entity.QNewsKeyword.*;
-import static com.bbsk.anything.user.entity.QUser.*;
-
-public class UserRepositoryImpl implements UserRepositoryCustom{
+public class UserRepositoryImpl implements UserRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

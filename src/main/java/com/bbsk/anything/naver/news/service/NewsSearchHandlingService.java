@@ -1,8 +1,8 @@
-package com.bbsk.anything.news.service;
+package com.bbsk.anything.naver.news.service;
 
-import com.bbsk.anything.news.entity.NewsKeyword;
-import com.bbsk.anything.news.repository.NewsKeywordRepository;
-import com.bbsk.anything.news.service.NewsService.ResponseSearchNewsDto;
+import com.bbsk.anything.naver.news.entity.NewsKeyword;
+import com.bbsk.anything.naver.news.repository.NewsKeywordRepository;
+import com.bbsk.anything.naver.news.service.NewsService.ResponseSearchNewsDto;
 import com.bbsk.anything.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class NewsSearchHandlingService {
             // keyword count +1
             user.getNewsKeyword().updateSearchCount();
             return new ResponseSearchNewsDto(user.getNewsKeyword().getKeyword(),
-                                                naverNewsApiService.getNews(user.getNewsKeyword().getKeyword()));
+                    naverNewsApiService.getNews(user.getNewsKeyword().getKeyword()));
         }
     }
 

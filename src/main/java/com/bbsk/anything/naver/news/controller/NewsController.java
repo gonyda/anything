@@ -1,7 +1,7 @@
-package com.bbsk.anything.news.controller;
+package com.bbsk.anything.naver.news.controller;
 
-import com.bbsk.anything.news.service.NewsService;
-import com.bbsk.anything.news.service.NewsService.ResponseSearchNewsDto;
+import com.bbsk.anything.naver.news.service.NewsService;
+import com.bbsk.anything.naver.news.service.NewsService.ResponseSearchNewsDto;
 import com.bbsk.anything.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,12 +1,11 @@
 package com.bbsk.anything.home.service;
 
-import com.bbsk.anything.crawler.fmkorea.entity.FootballNews;
 import com.bbsk.anything.crawler.fmkorea.service.FmKoreaService;
 import com.bbsk.anything.crawler.investing.service.InvestingService;
 import com.bbsk.anything.exchangeRate.entity.ExchangeRate;
 import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.javis.service.JavisService;
-import com.bbsk.anything.news.service.NewsService;
+import com.bbsk.anything.naver.news.service.NewsService;
 import com.bbsk.anything.schedule.service.ScheduleService;
 import com.bbsk.anything.user.entity.User;
 import lombok.RequiredArgsConstructor;
