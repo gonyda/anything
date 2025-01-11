@@ -25,8 +25,8 @@ public class InvestingService {
     private final InvestingPerformanceRepository investingPerformanceRepository;
 
     /*
-    * DB에 저장되어있는 실적 데이터 조회
-    * */
+     * DB에 저장되어있는 실적 데이터 조회
+     * */
     public List<InvestingPerformanceResponseDto> getPerformance() {
         List<InvestingPerformance> top8PerformanceGroupByTicker = investingPerformanceRepository.getTop8PerformanceGroupByTicker();
         List<String> tickerList = top8PerformanceGroupByTicker.stream()
@@ -51,15 +51,8 @@ public class InvestingService {
     }
 
     /*
-    * TODO
-    *  1. https://www.investing.com/stock-screener/?sp=country::5|sector::a|industry::a|equityType::a|exchange::a%3Ceq_market_cap;1
-    *     해당 사이트에서 시총순으로 리스트 업데이트 (스케줄러 하루에 한번)
-    *  2. 받아 온 리스트를 셀렉박스로 화면에 출력, 추가 버튼을 통해 실적데이터 조회
-    *  3. 추가버튼 실행 시 애니띵 DB에 정보 INSERT(화면 출력 가능)
-    * */
-    /*
-    * 실적 데이터 업데이트
-    * */
+     * 실적 데이터 업데이트
+     * */
     @Transactional
     public List<InvestingPerformance> modifyPerformance(String ticker) {
         InvestingPerformanceEnum company = InvestingPerformanceEnum.getByTicker(ticker.toUpperCase());
@@ -96,7 +89,7 @@ public class InvestingService {
     private void saveOrUpdate(List<InvestingPerformance> dataList) {
         dataList.forEach(entity -> {
             InvestingPerformance findEntity = investingPerformanceRepository.findByCompanyAndPeriodEnd(entity.getCompany(), entity.getPeriodEnd());
-            if(findEntity == null) {
+            if (findEntity == null) {
                 investingPerformanceRepository.save(entity);
             } else {
                 findEntity.updateValue(entity);
