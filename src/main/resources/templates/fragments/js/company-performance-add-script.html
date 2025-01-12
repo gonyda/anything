@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="fragment-company-performance-add-script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            let timeout = null; // key-up 이벤트 호출 시간 조절
+
+            $('#btn-add-performance').click(function () {
+                alert('ccc')
+
+            })
+            $('#ticker-search').keyup(function () {
+                let ticker = $('#ticker-search').val();
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    if (ticker.length > 0) {
+                        console.log('api 호출')
+                        $.ajax({
+                            type: 'get',
+                            url: '/ticker/' + ticker,
+                            dataType: 'json',
+                            success: function (res) { // 결과 성공 콜백함수
+                                console.log(res)
+                            },
+                            error: function (request, status, error) { // 결과 에러 콜백함수
+                                console.log(error)
+                            }
+                        });
+                    }
+                }, 500); // 500ms 대기
+            })
+        });
+    </script>
+</head>

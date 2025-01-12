@@ -1,9 +1,16 @@
 package com.bbsk.anything.ticker.service;
 
+import com.bbsk.anything.ticker.entity.Ticker;
+import com.bbsk.anything.ticker.repository.TickerRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -11,5 +18,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class TickerService {
 
-    // TODO 티커 OR 회사이름으로 검색, change Event
+    private final TickerRepository tickerRepository;
+
+    public List<ResponseTickerDto> getTicker(String ticker) {
+        List<Ticker> tickers = tickerRepository.findTop10ByTickerNameContainingOrderByTickerId(ticker.toUpperCase());
+
+        if (tickers.isEmpty()) {
+            throw new RuntimeException(" ## ERROR 해당하는 티커를 찾을 수 없습니다: " + ticker);
+        }
+
+        return tickers.stream()
+                .map(t -> new ResponseTickerDto(
+                        t.getTickerName(),
+                        t.getCompany(),
+                        t.getSector(),
+                        t.getIndustry()
+                ))
+                .toList();
+    }
+
+    /**
+     * 응답 dto
+     */
+    @Getter
+    @ToString
+    @AllArgsConstructor
+    public static class ResponseTickerDto {
+        public String ticker;
+        public String company;
+        public String sector;
+        public String industry;
+    }
 }

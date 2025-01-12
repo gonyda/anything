@@ -25,6 +25,7 @@ class SecurityConfig {
                         .requestMatchers("/").permitAll() // 메인페이지
                         .requestMatchers("/join").permitAll() // 회원가입 페이지
                         .requestMatchers("/join-process").permitAll() // 회원가입 로직 url
+                        .requestMatchers("/ticker/**").permitAll() // 기업 실적
                         .requestMatchers("/testApi").permitAll() // 임시
                         .requestMatchers("/fragments/**", "/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()

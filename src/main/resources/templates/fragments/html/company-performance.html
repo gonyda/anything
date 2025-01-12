@@ -12,7 +12,8 @@
             </h1>
             <!-- Button trigger modal -->
             <h4 class="text-start">
-                <span class="badge bg-info" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">기업 추가</span>
+                <span class="badge bg-info" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                      style="cursor: pointer;">기업 추가</span>
             </h4>
         </div>
         <div id="carouselExample" class="carousel slide">
@@ -39,14 +40,14 @@
                                     <th scope="row" th:text="${data.relDate}">발표일</th>
                                     <td th:text="${data.periodEnd}">마감기준</td>
                                     <td>
-                                                <span th:text="|${data.eps} / ${data.epsForecast}|"
-                                                      th:classappend="${data.eps} > ${data.epsForecast} ? 'text-red' : 'text-blue'">
-                                                </span>
+                                        <span th:text="|${data.eps} / ${data.epsForecast}|"
+                                              th:classappend="${data.eps} > ${data.epsForecast} ? 'text-red' : 'text-blue'">
+                                        </span>
                                     </td>
                                     <td>
-                                                <span th:text="|${data.revenue} / ${data.revenueForecast}|"
-                                                      th:classappend="${data.revenue} > ${data.revenueForecast} ? 'text-red' : 'text-blue'">
-                                                </span>
+                                        <span th:text="|${data.revenue} / ${data.revenueForecast}|"
+                                              th:classappend="${data.revenue} > ${data.revenueForecast} ? 'text-red' : 'text-blue'">
+                                        </span>
                                     </td>
                                 </tr>
                             </th:block>
