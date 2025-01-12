@@ -20,10 +20,25 @@
                             url: '/ticker/' + ticker,
                             dataType: 'json',
                             success: function (res) { // 결과 성공 콜백함수
-                                console.log(res)
+                                let tickerList = ``;
+                                if (res.length > 0) {
+                                    res.forEach(function (e, i) {
+                                        tickerList = tickerList +
+                                            `<div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault` + (i + 1) + `">
+                                                <label class="form-check-label" for="flexRadioDefault` + (i + 1) + `">
+                                                    <p>` + e.ticker + `</p>
+                                                    <p>` + e.company + `</p>
+                                                    <p>` + e.sector + `</p>
+                                                    <p>` + e.industry + `</p>
+                                                </label>
+                                            </div>`
+                                    })
+                                }
+                                $('#ticker-list').html(tickerList)
                             },
                             error: function (request, status, error) { // 결과 에러 콜백함수
-                                console.log(error)
+                                $('#ticker-list').html('<span>존재하지 않는 티커입니다.</span>')
                             }
                         });
                     }
