@@ -5,6 +5,7 @@ import com.bbsk.anything.crawler.investing.service.InvestingService;
 import com.bbsk.anything.exchangeRate.entity.ExchangeRate;
 import com.bbsk.anything.exchangeRate.service.ExchangeRateService;
 import com.bbsk.anything.javis.service.JavisService;
+import com.bbsk.anything.naver.finance.sevice.NaverFinanceService;
 import com.bbsk.anything.naver.news.service.NewsService;
 import com.bbsk.anything.schedule.service.ScheduleService;
 import com.bbsk.anything.user.entity.User;
@@ -26,6 +27,7 @@ public class HomeService {
     private final ExchangeRateService exchangeRateService;
     private final FmKoreaService fmKoreaService;
     private final InvestingService investingService;
+    private final NaverFinanceService naverFinanceService;
 
     public void getChat(User user, Model model) {
         model.addAttribute("chat", javisService.findAllByUser(user.getUserId()));
@@ -64,7 +66,11 @@ public class HomeService {
         return time.substring(0, 5);
     }
 
-    public void getPerformance(Model model) {
+    public void getPerformanceByInvesting(Model model) {
         model.addAttribute("performanceList", investingService.getPerformance());
+    }
+
+    public void getPerformanceByNaverFinance(Model model, User user) {
+        model.addAttribute("performanceList", naverFinanceService.getPerformance(user));
     }
 }

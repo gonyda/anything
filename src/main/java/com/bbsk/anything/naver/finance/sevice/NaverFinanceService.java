@@ -4,11 +4,12 @@ import com.bbsk.anything.crawler.finance.service.NaverFinanceCrawlerService;
 import com.bbsk.anything.naver.finance.entity.NaverFinance;
 import com.bbsk.anything.naver.finance.repository.NaverFinanceRepository;
 import com.bbsk.anything.user.entity.User;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,4 +42,37 @@ public class NaverFinanceService {
         }
     }
 
+    public List<NaverPerformanceResponseDto> getPerformance(User user) {
+        List<NaverFinance> recent5MonthPerformanceByUser = naverFinanceRepository.findRecent5MonthPerformanceByUser(user.getUserId());
+        List<String> companyList = recent5MonthPerformanceByUser
+                .stream()
+                .map(NaverFinance::getCompany)
+                .distinct()
+                .toList();
+
+        List<NaverPerformanceResponseDto> responseDtoList = new ArrayList<>();
+
+        companyList.forEach(company -> {
+            NaverPerformanceResponseDto.NaverPerformanceResponseDtoBuilder builder = NaverPerformanceResponseDto.builder();
+            builder.company(company);
+            builder.performanceList(recent5MonthPerformanceByUser.stream()
+                    .filter(performance -> {
+                        return company.equals(performance.getCompany());
+                    })
+                    .toList());
+            responseDtoList.add(builder.build());
+        });
+
+        return responseDtoList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @ToString
+    public static class NaverPerformanceResponseDto {
+        private String company;
+        private List<NaverFinance> performanceList = new ArrayList<>();
+    }
 }

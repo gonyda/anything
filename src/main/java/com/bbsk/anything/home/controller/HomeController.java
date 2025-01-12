@@ -35,11 +35,16 @@ public class HomeController {
             // 펨코 해외축구 뉴스
             // 상위 20개 조회
             homeService.findTop20ByOrderByRegDtDesc(model);
+            // 기업 실적
+            // 네이버 파이낸스
+            homeService.getPerformanceByNaverFinance(model, user);
         }
         // 한율 조회
         homeService.getExchangeRate(model);
+
         // 기업 실적
-        homeService.getPerformance(model);
+        // investing 크롤링 정지
+        // homeService.getPerformance(model);
 
         return "home/home";
     }

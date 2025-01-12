@@ -18,42 +18,66 @@
         </div>
         <div id="carouselExample" class="carousel slide">
             <div class="carousel-inner">
-                <th:block th:each="e, i: ${performanceList}">
-                    <div class="carousel-item" th:classappend="${i.index == 0} ? 'active' : ''">
+                <!-- 비로그인 -->
+                <th:block th:if="!${#authorization.expression('isAuthenticated()')}">
+                    <div>
                         <table class="table">
                             <thead>
                             <tr>
-                                <th colspan="4" th:text="${e.company}">기업이름</th>
+                                <th colspan="5">기업이름</th>
                             </tr>
                             </thead>
                             <thead>
                             <tr>
                                 <th scope="col">발표일</th>
-                                <th scope="col">마감기준</th>
-                                <th scope="col">주당순이익 / 예측</th>
-                                <th scope="col">매출 / 예측</th>
+                                <th scope="col">EPS(주당순이익)</th>
+                                <th scope="col">매출액</th>
+                                <th scope="col">당기순이익</th>
+                                <th scope="col">순이익마진율</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <th:block th:each="data: ${e.performanceList}">
-                                <tr>
-                                    <th scope="row" th:text="${data.relDate}">발표일</th>
-                                    <td th:text="${data.periodEnd}">마감기준</td>
-                                    <td>
-                                        <span th:text="|${data.eps} / ${data.epsForecast}|"
-                                              th:classappend="${data.eps} > ${data.epsForecast} ? 'text-red' : 'text-blue'">
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span th:text="|${data.revenue} / ${data.revenueForecast}|"
-                                              th:classappend="${data.revenue} > ${data.revenueForecast} ? 'text-red' : 'text-blue'">
-                                        </span>
-                                    </td>
-                                </tr>
-                            </th:block>
+                            <tr>
+                                <td colspan="5">로그인 후에 이용하실 수 있습니다.</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
+                </th:block>
+
+                <!-- 로그인 -->
+                <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                    <th:block th:each="e, i: ${performanceList}">
+                        <div class="carousel-item" th:classappend="${i.index == 0} ? 'active' : ''">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th colspan="5" th:text="${e.company}">기업이름</th>
+                                </tr>
+                                </thead>
+                                <thead>
+                                <tr>
+                                    <th scope="col">발표일</th>
+                                    <th scope="col">EPS(주당순이익)</th>
+                                    <th scope="col">매출액</th>
+                                    <th scope="col">당기순이익</th>
+                                    <th scope="col">순이익마진율</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="data: ${e.performanceList}">
+                                    <tr>
+                                        <th scope="row" th:text="${data.relDate}">발표일</th>
+                                        <td th:text="${data.eps}">EPS(주당순이익)</td>
+                                        <td th:text="${data.salesRevenue}">매출액</td>
+                                        <td th:text="${data.netIncome}">당기순이익</td>
+                                        <td th:text="${data.netProfitMargin}">순이익마진율</td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </th:block>
                 </th:block>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev"
