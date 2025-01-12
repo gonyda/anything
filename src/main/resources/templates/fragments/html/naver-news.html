@@ -23,7 +23,6 @@
             <span class="input-group-text">#</span>
             <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
                    id="val-newsKeyword" th:value="${keyword} ?: ''">
-            </script>
             <button class="btn btn-dark" type="button" id="btn-searchNews">검색</button>
         </div>
         <div class="overflow-auto" style="max-height: 75vh">
@@ -46,12 +45,14 @@
                 <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                     <th:block th:if="${news != null}">
                         <th:block th:each="e: ${news.items}">
-                            <a th:href="${e.link}" target="_blank" class="list-group-item list-group-item-action" aria-current="true">
+                            <a th:href="${e.link}" target="_blank" class="list-group-item list-group-item-action"
+                               aria-current="true">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1 newsTitle" th:utext="${e.title}">
                                         뉴스 제목
                                     </h5>
-                                    <small class="newsDate" th:text="${#temporals.format(e.pubDate, 'yyyy-MM-dd HH:mm')}">뉴스 일자</small>
+                                    <small class="newsDate"
+                                           th:text="${#temporals.format(e.pubDate, 'yyyy-MM-dd HH:mm')}">뉴스 일자</small>
                                 </div>
                                 <p class="mb-1 text-start newsDec" th:utext="${e.description}">뉴스 내용</p>
                             </a>

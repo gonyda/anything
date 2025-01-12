@@ -6,15 +6,35 @@
             let timeout = null; // key-up 이벤트 호출 시간 조절
 
             $('#btn-add-performance').click(function () {
-                alert('ccc')
+                $('#btn-add-performance').prop('disabled', true);
+                $('#ticker-search').prop('readonly', true);
 
+                let checkedTicker = $('input[name="ticker-radio"]:checked').attr('id');
+                let checkedCompany = $('input[name="ticker-radio"]:checked').attr('company');
+
+                $.ajax({
+                    type: 'post',
+                    url: '/finance/' + checkedTicker + '/' + checkedCompany,
+                    dataType: 'text',
+                    success: function (res) { // 결과 성공 콜백함수
+                        alert(res)
+                        $('#btn-add-performance').prop('disabled', false);
+                        $('#ticker-search').prop('readonly', false);
+                    },
+                    error: function (request, status, error) { // 결과 에러 콜백함수
+                        alert((error))
+                        $('#btn-add-performance').prop('disabled', false);
+                        $('#ticker-search').prop('readonly', false);
+                    }
+                });
             })
+
+
             $('#ticker-search').keyup(function () {
                 let ticker = $('#ticker-search').val();
                 clearTimeout(timeout);
                 timeout = setTimeout(() => {
                     if (ticker.length > 0) {
-                        console.log('api 호출')
                         $.ajax({
                             type: 'get',
                             url: '/ticker/' + ticker,
@@ -25,12 +45,19 @@
                                     res.forEach(function (e, i) {
                                         tickerList = tickerList +
                                             `<div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault` + (i + 1) + `">
-                                                <label class="form-check-label" for="flexRadioDefault` + (i + 1) + `">
-                                                    <p>` + e.ticker + `</p>
-                                                    <p>` + e.company + `</p>
+                                                <input class="form-check-input" type="radio" name="ticker-radio"
+                                                    id="` + e.ticker + `"
+                                                    company="` + e.company + `">
+                                                <label class="form-check-label" for="` + e.ticker + `">
+                                                    <p>
+                                                        <span style="font-weight: bold">
+                                                            ` + e.ticker + `
+                                                        </span>
+                                                        <span style="font-size: 15px; color: gray">
+                                                            ` + e.company + `
+                                                        </span>
+                                                    </p>
                                                     <p>` + e.sector + `</p>
-                                                    <p>` + e.industry + `</p>
                                                 </label>
                                             </div>`
                                     })

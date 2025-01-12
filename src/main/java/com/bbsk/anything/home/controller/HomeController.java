@@ -1,6 +1,5 @@
 package com.bbsk.anything.home.controller;
 
-import com.bbsk.anything.crawler.yahoo.service.YahooFinService;
 import com.bbsk.anything.home.service.HomeService;
 import com.bbsk.anything.user.dto.RequestUserDto;
 import com.bbsk.anything.user.entity.User;
@@ -13,10 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
-import static com.bbsk.anything.schedule.service.ScheduleService.ResponseScheduleDto;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -24,9 +19,6 @@ public class HomeController {
 
     private final HomeService homeService;
     private final UserService userService;
-
-    private final YahooFinService yahooFinService;
-
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal User user, Model model) {
@@ -72,11 +64,5 @@ public class HomeController {
         userService.save(user);
 
         return "redirect:/login";
-    }
-
-    @GetMapping("/testApi")
-    public String testApi(Model model) {
-        yahooFinService.getPerformanceFromYahoo();
-        return "home/home";
     }
 }

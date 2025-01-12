@@ -1,14 +1,16 @@
 package com.bbsk.anything.naver.finance.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @ToString
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class NaverFinance {
 
     @Id
