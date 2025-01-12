@@ -1,4 +1,4 @@
-package com.bbsk.anything.crawler.naver.finance.constant;
+package com.bbsk.anything.crawler.finance.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

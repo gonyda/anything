@@ -1,9 +1,10 @@
-package com.bbsk.anything.crawler.naver.finance.service;
+package com.bbsk.anything.crawler.finance.service;
 
-import com.bbsk.anything.crawler.naver.finance.constant.NaverFinanceCrawlerEnum;
-import com.bbsk.anything.crawler.naver.finance.constant.NaverFinanceRowTypeEnum;
+import com.bbsk.anything.crawler.finance.constant.NaverFinanceCrawlerEnum;
+import com.bbsk.anything.crawler.finance.constant.NaverFinanceRowTypeEnum;
 import com.bbsk.anything.crawler.utils.SeleniumUtils;
 import com.bbsk.anything.naver.finance.entity.NaverFinance;
+import com.bbsk.anything.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +40,7 @@ public class NaverFinanceCrawlerService {
         }
     }
 
-    public List<NaverFinance> convertPerformanceDataToEntities(List<List<String>> performanceData, String ticker, String company) {
+    public List<NaverFinance> convertPerformanceDataToEntities(List<List<String>> performanceData, String ticker, String company, User user) {
         return mapToFinanceEntities(
                 extractColumnValues(performanceData, NaverFinanceRowTypeEnum.DATE),
                 extractColumnValues(performanceData, NaverFinanceRowTypeEnum.EPS),
@@ -47,7 +48,8 @@ public class NaverFinanceCrawlerService {
                 extractColumnValues(performanceData, NaverFinanceRowTypeEnum.NET_INCOME),
                 extractColumnValues(performanceData, NaverFinanceRowTypeEnum.PROFIT_MARGIN),
                 ticker,
-                company);
+                company,
+                user);
     }
 
     private List<WebElement> fetchTableRows(String ticker, WebDriver chromeDriver) {
@@ -82,12 +84,13 @@ public class NaverFinanceCrawlerService {
 
     private List<NaverFinance> mapToFinanceEntities(
             List<String> dates, List<String> eps, List<String> revenues,
-            List<String> netIncomes, List<String> profitMargins, String ticker, String company) {
+            List<String> netIncomes, List<String> profitMargins, String ticker, String company, User user) {
         List<NaverFinance> entities = new ArrayList<>();
         for (int i = 0; i < dates.size(); i++) {
             entities.add(NaverFinance.builder()
                     .ticker(ticker)
                     .company(company)
+                    .user(user)
                     .relDate(dates.get(i))
                     .eps(getValueByIndex(eps, i))
                     .salesRevenue(getValueByIndex(revenues, i))

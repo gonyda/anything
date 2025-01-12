@@ -1,12 +1,14 @@
 package com.bbsk.anything.user.entity;
 
 import com.bbsk.anything.javis.entity.Javis;
+import com.bbsk.anything.naver.finance.entity.NaverFinance;
 import com.bbsk.anything.naver.news.entity.NewsKeyword;
 import com.bbsk.anything.schedule.entity.Schedule;
 import com.bbsk.anything.security.serivce.Sha512CustomPasswordEncoder;
 import com.bbsk.anything.user.dto.RequestUserDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,6 +40,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Javis> javisList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<NaverFinance> naverFinances = new ArrayList<>(); // 여러개의 NaverFinance 연관
 
     @Column(nullable = false)
     private String userPw;

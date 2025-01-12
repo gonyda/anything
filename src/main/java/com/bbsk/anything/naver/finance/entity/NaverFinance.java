@@ -1,5 +1,6 @@
 package com.bbsk.anything.naver.finance.entity;
 
+import com.bbsk.anything.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,10 +15,15 @@ import java.time.LocalDateTime;
 public class NaverFinance {
 
     // TODO user 연관매핑 추가
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId") // foreign key 설정
+    @ToString.Exclude
+    private User user; // 연관된 유저 엔티티
 
     @Column(nullable = false)
     private String company; // 화사명
