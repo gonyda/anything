@@ -21,6 +21,7 @@ public class TickerService {
     private final TickerRepository tickerRepository;
 
     public List<ResponseTickerDto> getTicker(String ticker) {
+        // TODO DB 커넥션을 줄이기 위한 캐시처리
         List<Ticker> tickers = tickerRepository.findTop10ByTickerNameContainingOrderByTickerId(ticker.toUpperCase());
 
         if (tickers.isEmpty()) {

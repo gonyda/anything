@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum NaverFinanceEnum {
+public enum NaverFinanceCrawlerEnum {
 
     NAVER_FINANCE_URL_1("https://m.stock.naver.com/worldstock/stock/"),
     NAVER_FINANCE_URL_2(".O/finance/ratios/quarter"),

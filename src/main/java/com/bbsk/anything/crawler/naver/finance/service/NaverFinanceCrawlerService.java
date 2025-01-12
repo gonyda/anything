@@ -1,6 +1,7 @@
 package com.bbsk.anything.crawler.naver.finance.service;
 
-import com.bbsk.anything.crawler.naver.finance.constant.NaverFinanceEnum;
+import com.bbsk.anything.crawler.naver.finance.constant.NaverFinanceCrawlerEnum;
+import com.bbsk.anything.crawler.naver.finance.constant.NaverFinanceRowTypeEnum;
 import com.bbsk.anything.crawler.utils.SeleniumUtils;
 import com.bbsk.anything.naver.finance.entity.NaverFinance;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,13 @@ import java.util.Set;
 public class NaverFinanceCrawlerService {
 
     // 크롤링 데이터에서 필요한 Row
-    private static final Set<String> ROW_TYPES = Set.of("EPS", "매출액", "당기순이익", "순이익마진율", "기간");
+    private static final Set<NaverFinanceRowTypeEnum> ROW_TYPES =
+            Set.of(NaverFinanceRowTypeEnum.DATE,
+                    NaverFinanceRowTypeEnum.EPS,
+                    NaverFinanceRowTypeEnum.REVENUE,
+                    NaverFinanceRowTypeEnum.NET_INCOME,
+                    NaverFinanceRowTypeEnum.PROFIT_MARGIN);
 
-    // 크롤링 데이터 조회
     public List<List<String>> fetchPerformanceDataByTicker(String ticker) {
         WebDriver chromeDriver = SeleniumUtils.getChromeDriver();
         try {
@@ -36,18 +41,18 @@ public class NaverFinanceCrawlerService {
 
     public List<NaverFinance> convertPerformanceDataToEntities(List<List<String>> performanceData, String ticker, String company) {
         return mapToFinanceEntities(
-                extractColumnValues(performanceData, "기간"),
-                extractColumnValues(performanceData, "EPS"),
-                extractColumnValues(performanceData, "매출액"),
-                extractColumnValues(performanceData, "당기순이익"),
-                extractColumnValues(performanceData, "순이익마진율"),
+                extractColumnValues(performanceData, NaverFinanceRowTypeEnum.DATE),
+                extractColumnValues(performanceData, NaverFinanceRowTypeEnum.EPS),
+                extractColumnValues(performanceData, NaverFinanceRowTypeEnum.REVENUE),
+                extractColumnValues(performanceData, NaverFinanceRowTypeEnum.NET_INCOME),
+                extractColumnValues(performanceData, NaverFinanceRowTypeEnum.PROFIT_MARGIN),
                 ticker,
                 company);
     }
 
     private List<WebElement> fetchTableRows(String ticker, WebDriver chromeDriver) {
-        WebElement parentElement = SeleniumUtils.getParentElement(buildTickerUrl(ticker), NaverFinanceEnum.TARGET_TABLE_CLASS_NAME.getValue(), chromeDriver);
-        return SeleniumUtils.getChildElementsByTagName(parentElement, NaverFinanceEnum.TAG_NAME.getValue());
+        WebElement parentElement = SeleniumUtils.getParentElement(buildTickerUrl(ticker), NaverFinanceCrawlerEnum.TARGET_TABLE_CLASS_NAME.getValue(), chromeDriver);
+        return SeleniumUtils.getChildElementsByTagName(parentElement, NaverFinanceCrawlerEnum.TAG_NAME.getValue());
     }
 
     private List<List<String>> extractPerformanceRows(List<WebElement> rows) {
@@ -58,18 +63,18 @@ public class NaverFinanceCrawlerService {
     }
 
     private String buildTickerUrl(String ticker) {
-        return StringUtils.join(NaverFinanceEnum.NAVER_FINANCE_URL_1.getValue(), ticker, NaverFinanceEnum.NAVER_FINANCE_URL_2.getValue());
+        return StringUtils.join(NaverFinanceCrawlerEnum.NAVER_FINANCE_URL_1.getValue(), ticker, NaverFinanceCrawlerEnum.NAVER_FINANCE_URL_2.getValue());
     }
-
 
     private boolean isRowType(String rowType) {
-        return ROW_TYPES.contains(rowType);
+        return ROW_TYPES.stream()
+                .map(NaverFinanceRowTypeEnum::getColumnName)
+                .anyMatch(rowType::equals);
     }
 
-
-    private List<String> extractColumnValues(List<List<String>> data, String rowPrefix) {
+    private List<String> extractColumnValues(List<List<String>> data, NaverFinanceRowTypeEnum columnType) {
         return data.stream()
-                .filter(row -> rowPrefix.equals(row.get(0)))
+                .filter(row -> columnType.getColumnName().equals(row.get(0)))
                 .findFirst()
                 .map(row -> row.subList(1, row.size()))
                 .orElse(List.of());
