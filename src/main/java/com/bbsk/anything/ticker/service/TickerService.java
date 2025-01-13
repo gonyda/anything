@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +21,8 @@ public class TickerService {
 
     private final TickerRepository tickerRepository;
 
+    @Cacheable(value = "tickers", key = "#ticker.toUpperCase()")
     public List<ResponseTickerDto> getTicker(String ticker) {
-        // TODO DB 커넥션을 줄이기 위한 캐시처리
         List<Ticker> tickers = tickerRepository.findTop10ByTickerNameContainingOrderByTickerId(ticker.toUpperCase());
 
         if (tickers.isEmpty()) {

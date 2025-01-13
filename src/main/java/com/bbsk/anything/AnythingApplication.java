@@ -7,11 +7,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableScheduling
+@EnableScheduling // 스케줄링
 @EnableConfigurationProperties(GlobalProperties.class)
 @SpringBootApplication
+@EnableCaching // 캐시 활성화
 public class AnythingApplication implements CommandLineRunner {
 
     private final NaverConfig naverConfig;
