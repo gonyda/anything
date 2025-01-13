@@ -20,9 +20,10 @@
                         alert(res)
                         $('#btn-add-performance').prop('disabled', false);
                         $('#ticker-search').prop('readonly', false);
+                        window.location.href = "/"
                     },
                     error: function (request, status, error) { // 결과 에러 콜백함수
-                        alert((error))
+                        alert(error)
                         $('#btn-add-performance').prop('disabled', false);
                         $('#ticker-search').prop('readonly', false);
                     }

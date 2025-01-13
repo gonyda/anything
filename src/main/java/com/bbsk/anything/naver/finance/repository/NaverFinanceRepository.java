@@ -21,4 +21,7 @@ public interface NaverFinanceRepository extends JpaRepository<NaverFinance, Long
             ORDER BY nf.ticker, nf.rel_date DESC;
             """, nativeQuery = true)
     List<NaverFinance> findRecent5MonthPerformanceByUser(@Param("userId") String userId);
+
+    // 티커와 relDate로 데이터 존재 여부 확인
+    boolean existsByTickerAndRelDate(String ticker, String relDate);
 }

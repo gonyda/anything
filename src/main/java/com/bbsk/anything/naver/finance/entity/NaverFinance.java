@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NaverFinance {
 
-    // TODO user 연관매핑 추가
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -33,8 +33,19 @@ public class NaverFinanceService {
                             user
                     );
 
-            // TODO 티커 + relDate 조건으로 해당 데이터가 있으면 no save, 없으면 save
-            naverFinanceRepository.saveAll(naverFinances);
+            // 티커와 날짜 조건으로 중복 데이터가 존재하는지 확인
+            List<NaverFinance> newFinancesToSave = new ArrayList<>();
+            for (NaverFinance finance : naverFinances) {
+                boolean exists = naverFinanceRepository.existsByTickerAndRelDate(finance.getTicker(), finance.getRelDate());
+                if (!exists) {
+                    newFinancesToSave.add(finance);
+                }
+            }
+
+            // 새로운 데이터만 저장
+            if (!newFinancesToSave.isEmpty()) {
+                naverFinanceRepository.saveAll(newFinancesToSave);
+            }
             return true;
         } catch (Exception e) {
             log.error("## 기업 실적데이터를 삽입하는데 문제가 생겼습니다. {}", e.getMessage());
