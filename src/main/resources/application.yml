@@ -37,6 +37,9 @@ spring:
 logging.level:
   org.hibernate.orm.jdbc.bind: trace
   root: info
+  org:
+    springframework:
+      cache: TRACE;
 
 # Chrome Driver
 anything:
