@@ -11,10 +11,12 @@
                 <span class="badge bg-dark">기업 실적표</span>
             </h1>
             <!-- Button trigger modal -->
-            <h4 class="text-start">
+            <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                <h4 class="text-start">
                 <span class="badge bg-info" data-bs-toggle="modal" data-bs-target="#exampleModal"
                       style="cursor: pointer;">기업 추가</span>
-            </h4>
+                </h4>
+            </th:block>
         </div>
         <div id="carouselExample" class="carousel slide">
             <div class="carousel-inner">
