@@ -45,4 +45,3 @@ logging.level:
 anything:
   chrome:
     driver:
-      path: /Users/gony/chromedriver-mac-arm64/chromedriver
