@@ -44,4 +44,4 @@ logging.level:
 # Chrome Driver
 anything:
   chrome:
-    driver:
+    driver: classpath:chromedriver
